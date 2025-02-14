@@ -3,7 +3,6 @@ namespace myImages {
 
     helpers._registerFactory("image", function(name: string) {
         switch(helpers.stringTrim(name)) {
-            case "Mp8`t%T`~6j@nahYppWI":
             case "Marian":return img`
 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 
 . . . . . . 4 4 4 4 . . . . . . 
@@ -20,7 +19,7 @@ namespace myImages {
 . . . 4 2 2 2 2 2 2 2 2 4 . . . 
 . . . . 4 4 2 2 2 2 4 4 . . . . 
 . . . . . . 4 4 4 4 . . . . . . 
-. . . . . . . . . . . . . . . . 
+3 . . . . . . . . . . . . . . 3 
 `;
         }
         return null;
