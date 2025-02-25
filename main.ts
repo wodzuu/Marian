@@ -6,20 +6,18 @@ enum ActionKind {
     WalkingRight
 }
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
-    skacz()
+    wGórę()
 })
 function stwórzMariana () {
-    marian = sprites.create(assets.image`Marian`, SpriteKind.Player)
+    marian = sprites.create(assets.image`Marian0`, SpriteKind.Player)
+    mySprite = 0
     scene.cameraFollowSprite(marian)
     controller.moveSprite(marian, 100, 0)
     marian.ay = 300
 }
-function skacz () {
-    if (marian.isHittingTile(CollisionDirection.Bottom)) {
-        marian.vy = -150
-        music.play(music.melodyPlayable(music.thump), music.PlaybackMode.InBackground)
-    }
-}
+scene.onOverlapTile(SpriteKind.Player, sprites.builtin.forestTiles0, function (sprite, location) {
+    game.gameOver(true)
+})
 function stwórzAnimacje () {
     marianIdzieWLewo = animation.createAnimation(ActionKind.WalkingLeft, 100)
     marianIdzieWLewo.addAnimationFrame(img`
@@ -208,6 +206,15 @@ function stwórzAnimacje () {
         `)
     animation.attachAnimation(marian, marianStoi)
 }
+function wGórę () {
+    if (marian.isHittingTile(CollisionDirection.Bottom)) {
+        marian.vy = -150
+        music.play(music.melodyPlayable(music.knock), music.PlaybackMode.InBackground)
+    }
+    if (marian.tileKindAt(TileDirection.Center, assets.tile`myTile0`)) {
+        marian.y += -16
+    }
+}
 function załadujPoziom (poziom: number) {
     tiles.setCurrentTilemap(tilemap`level0`)
     pozycjaStartowaMariana = tiles.getTilesByType(sprites.swamp.swampTile3)[0]
@@ -217,12 +224,15 @@ let pozycjaStartowaMariana: tiles.Location = null
 let marianStoi: animation.Animation = null
 let marianIdzieWPrawo: animation.Animation = null
 let marianIdzieWLewo: animation.Animation = null
+let mySprite = 0
 let marian: Sprite = null
 let poziom = 0
 scene.setBackgroundColor(9)
 stwórzMariana()
 stwórzAnimacje()
 załadujPoziom(poziom)
+game.setGameOverEffect(true, effects.confetti)
+game.setGameOverMessage(true, "Brawo!")
 game.onUpdate(function () {
     if (marian.vx < 0) {
         animation.setAction(marian, ActionKind.WalkingLeft)
@@ -230,5 +240,25 @@ game.onUpdate(function () {
         animation.setAction(marian, ActionKind.WalkingRight)
     } else {
         animation.setAction(marian, ActionKind.Idle)
+    }
+    if (marian.tileKindAt(TileDirection.Center, assets.tile`myTile0`)) {
+        marian.ay = 0
+        marian.vy = 0
+    } else {
+        marian.ay = 300
+    }
+    if (marian.tileKindAt(TileDirection.Bottom, assets.tile`myTile`)) {
+        tiles.setTileAt(marian.tilemapLocation().getNeighboringLocation(CollisionDirection.Bottom), assets.tile`myTile2`)
+        scene.cameraShake(2, 500)
+        music.play(music.melodyPlayable(music.thump), music.PlaybackMode.InBackground)
+    }
+})
+game.onUpdateInterval(1000, function () {
+    for (let value of tiles.getTilesByType(assets.tile`myTile3`)) {
+        tiles.setWallAt(value, false)
+        tiles.setTileAt(value, assets.tile`myTile1`)
+    }
+    for (let value of tiles.getTilesByType(assets.tile`myTile2`)) {
+        tiles.setTileAt(value, assets.tile`myTile3`)
     }
 })
