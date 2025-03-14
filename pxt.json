@@ -3,7 +3,8 @@
     "description": "",
     "dependencies": {
         "device": "*",
-        "animation": "*"
+        "animation": "*",
+        "arcade-background-scroll": "github:microsoft/arcade-background-scroll#v0.1.2"
     },
     "files": [
         "main.blocks",
@@ -19,7 +20,7 @@
         "test.ts"
     ],
     "targetVersions": {
-        "target": "1.12.59",
+        "target": "1.12.61",
         "targetId": "arcade"
     },
     "supportedTargets": [
