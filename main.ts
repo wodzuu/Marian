@@ -408,7 +408,7 @@ game.onUpdateInterval(1000, function () {
         tiles.setWallAt(value, false)
         tiles.setTileAt(value, assets.tile`myTile1`)
     }
-    for (let value of tiles.getTilesByType(assets.tile`myTile2`)) {
-        tiles.setTileAt(value, assets.tile`myTile3`)
+    for (let value2 of tiles.getTilesByType(assets.tile`myTile2`)) {
+        tiles.setTileAt(value2, assets.tile`myTile3`)
     }
 })
