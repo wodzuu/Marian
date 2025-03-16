@@ -5,9 +5,6 @@ enum ActionKind {
     WalkingLeft,
     WalkingRight
 }
-controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
-    wGórę()
-})
 function stwórzMariana () {
     marian = sprites.create(assets.image`Marian0`, SpriteKind.Player)
     mySprite = 0
@@ -18,6 +15,9 @@ function stwórzMariana () {
 scene.onOverlapTile(SpriteKind.Player, sprites.builtin.forestTiles0, function (sprite, location) {
     poziom = poziom + 1
     załadujPoziom(poziom)
+})
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    wGórę()
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile4`, function (sprite, location) {
     game.gameOver(false)
@@ -369,6 +369,12 @@ function załadujPoziom (poziom: number) {
     }
     pozycjaStartowaMariana = tiles.getTilesByType(sprites.swamp.swampTile3)[0]
     tiles.placeOnTile(marian, pozycjaStartowaMariana)
+    tilesExtra.runTileAnimation(
+    sprites.swamp.swampTile13,
+    assets.animation`aniGrass0`,
+    400,
+    TileAnimationOrder.Random
+    )
 }
 let pozycjaStartowaMariana: tiles.Location = null
 let marianStoi: animation.Animation = null
