@@ -53,10 +53,10 @@
         "displayName": "myTile6"
     },
     "tile9": {
-        "data": "hwQQABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABwAAAAAAAAcHAAAAAAAHBwcDAAAA4O7u7u7uAADg7u7u7u4AAAAHBwcDAAAAAAAHBwAAAAAAAAAHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+        "data": "hwQQABAAAAAAAAAAAAAAYAAAAABwdwBnAAAAAAAAd3cAAAAAYGYGdgAAAAAAAGZ3AAAAd3cHYHcAAAAAAHd3dwAAAAAAZmZmAAAAAGB2d3cAAABwd3cAZgAAAAAAYGZmAAAAAGBmYHcAAABgZnB3dwAAAABwdwBmAAAAAABgZmYAAAAAAAAAcA==",
         "mimeType": "image/x-mkcd-f4",
         "tilemapTile": true,
-        "displayName": "myTile7"
+        "displayName": "grass0"
     },
     "level1": {
         "id": "level1",

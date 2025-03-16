@@ -380,7 +380,7 @@ namespace myTiles {
             case "tile7":return tile7;
             case "myTile6":
             case "tile8":return tile8;
-            case "myTile7":
+            case "grass0":
             case "tile9":return tile9;
         }
         return null;
