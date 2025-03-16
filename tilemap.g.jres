@@ -76,6 +76,36 @@
         "tilemapTile": true,
         "displayName": "myTile10"
     },
+    "tile18": {
+        "data": "hwQQABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADQAAAAAAAAANAMAAAAAADQ0AwAAAAAAN3QDQAA0N3d3d3NzN3d3d3dzMzMzMzdzcwAAMzMzMzMzAAAzQAAAADMAAANAAAAAMAAAA0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "tilemapTile": true,
+        "displayName": "tree2"
+    },
+    "tile19": {
+        "data": "hwQQABAAAAAAcABwUAAHAAdwAHdwcHVQZ3VwdXBnZ3Bnd2B3d2Vnd3dlZXV2dmd3dXZnZ2Z2Znd3dmZnd3d2d2fWfWd33Xd3ZmbMZmfGZnZnZmZmd2dnd2d2ZmdndmdmdnZnd3dmd3Z2ZwcGd2B2ZgYHBwZnYHdgAAdmAGdwZ2AAAGcABwBnAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "tilemapTile": true,
+        "displayName": "tree3"
+    },
+    "tile17": {
+        "data": "hwQQABAAAAAAAAAAAAAAAAAAAAAAdwBnAAAAcFB3UGcAAAB3YGdwBgAAUGdwZ2cGAFBwZXZmZwYAdWZ3dnZnBnV3fXd9d3fdYGbGZ2xmd8dwZmdnZ2d3BwB3Zmd2Z2YHAAAHZ3Z2dgcAAAd2BmdgBwAAAHAGZ2BnAAAAAABgYGAAAAAAAAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "tilemapTile": true,
+        "displayName": "tree1"
+    },
+    "tile16": {
+        "data": "hwQQABAAAAAAAAcAdwYAAHBwdVB3BgAAUGdncHcGAAB3Zmd1ZwYAAHd2Z3dnAAAAZXZmd2YAANB1d3Z3ZgAA0Hfdd3fd3d3dZ8ZmdsfMzMx3Z2d3ZwAAwGd2Z2ZnAAAAd2Z3dmcGAAB3YHZmZ3YAAGdgd2BnZwAAYHBnYGcGAAAAAAcAZwYAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "tilemapTile": true,
+        "displayName": "tree0"
+    },
+    "tile20": {
+        "data": "hwQQABAAAAAAd2cAAAAAAHB3ZQAAAAAAUGdnAAAAAAB3ZgcAAAAAAHd2BwAAAAAAZXYGAAAAAAB1dwYAAAAA0Hfd3d3d3d3dZ8bMzMzMzMx3ZwcAAAAAzGd2BwAAAAAAd2YHAAAAAAB3ZmYAAAAAAGdmZwAAAAAAYHZnAAAAAAAAAGcAAAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "tilemapTile": true,
+        "displayName": "tree4"
+    },
     "level1": {
         "id": "level1",
         "mimeType": "application/mkcd-tilemap",
@@ -300,7 +330,12 @@
             "myTiles.tile9",
             "myTiles.tile10",
             "myTiles.tile11",
-            "myTiles.tile13"
+            "myTiles.tile13",
+            "myTiles.tile16",
+            "myTiles.tile17",
+            "myTiles.tile18",
+            "myTiles.tile19",
+            "myTiles.tile20"
         ],
         "displayName": "level9"
     },

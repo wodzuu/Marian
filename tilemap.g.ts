@@ -26,6 +26,16 @@ namespace myTiles {
     export const tile11 = image.ofBuffer(hex``);
     //% fixedInstance jres blockIdentity=images._tile
     export const tile13 = image.ofBuffer(hex``);
+    //% fixedInstance jres blockIdentity=images._tile
+    export const tile16 = image.ofBuffer(hex``);
+    //% fixedInstance jres blockIdentity=images._tile
+    export const tile17 = image.ofBuffer(hex``);
+    //% fixedInstance jres blockIdentity=images._tile
+    export const tile18 = image.ofBuffer(hex``);
+    //% fixedInstance jres blockIdentity=images._tile
+    export const tile19 = image.ofBuffer(hex``);
+    //% fixedInstance jres blockIdentity=images._tile
+    export const tile20 = image.ofBuffer(hex``);
 
     helpers._registerFactory("tilemap", function(name: string) {
         switch(helpers.stringTrim(name)) {
@@ -451,6 +461,16 @@ namespace myTiles {
             case "tile11":return tile11;
             case "myTile10":
             case "tile13":return tile13;
+            case "tree2":
+            case "tile18":return tile18;
+            case "tree3":
+            case "tile19":return tile19;
+            case "tree1":
+            case "tile17":return tile17;
+            case "tree0":
+            case "tile16":return tile16;
+            case "tree4":
+            case "tile20":return tile20;
         }
         return null;
     })
