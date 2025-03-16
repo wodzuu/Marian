@@ -376,7 +376,7 @@ function załadujPoziom (poziom: number) {
     TileAnimationOrder.Random
     )
     tilesExtra.runTileAnimation(
-    assets.tile`tree1`,
+    assets.tile`myTile4`,
     assets.animation`aniGrass0`,
     400,
     TileAnimationOrder.Random
