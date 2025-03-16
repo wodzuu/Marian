@@ -53,7 +53,7 @@
         "displayName": "myTile6"
     },
     "tile9": {
-        "data": "hwQQABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABwAAAAAAAAcHAAAAAAAHBwcAAAAA4O7u7u7uAADg7u7u7u4AAAAHBwcAAAAAAAAHBwAAAAAAAAAHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+        "data": "hwQQABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABwAAAAAAAAcHAAAAAAAHBwcDAAAA4O7u7u7uAADg7u7u7u4AAAAHBwcDAAAAAAAHBwAAAAAAAAAHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
         "mimeType": "image/x-mkcd-f4",
         "tilemapTile": true,
         "displayName": "myTile7"
@@ -253,8 +253,7 @@
             "myTiles.tile6",
             "myTiles.tile8",
             "sprites.swamp.swampTile13",
-            "myTiles.tile9",
-            "myTiles.tile7"
+            "myTiles.tile9"
         ],
         "displayName": "level9"
     },

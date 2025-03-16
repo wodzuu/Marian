@@ -356,7 +356,7 @@ namespace myTiles {
 . . . 2 . . . . . . . . . . . . 
 . . . . . . . . . . . . . . . . 
 2 2 . 2 2 2 2 2 2 2 2 2 2 2 2 2 
-`, [myTiles.transparency16,myTiles.tile2,myTiles.tile1,sprites.castle.tilePath2,sprites.builtin.forestTiles0,sprites.swamp.swampTile3,myTiles.tile6,myTiles.tile8,sprites.swamp.swampTile13,myTiles.tile9,myTiles.tile7], TileScale.Sixteen);
+`, [myTiles.transparency16,myTiles.tile2,myTiles.tile1,sprites.castle.tilePath2,sprites.builtin.forestTiles0,sprites.swamp.swampTile3,myTiles.tile6,myTiles.tile8,sprites.swamp.swampTile13,myTiles.tile9], TileScale.Sixteen);
         }
         return null;
     })
