@@ -59,11 +59,11 @@
         "displayName": "myTile7"
     },
     "tile10": {
-         "data": "hwQQABAAAAAAAAAAAAAgAAAAAAAAAEACAAAAAAAAQncAAAAAAAAgdwAAAAAAAAAHAAAAAAAABAcAAAAAAABUdwAAAAAAQEQHAAAAAAAABAcAAAAAAAAAAAAAAAAAAAQHAAAAAAAAVAcAAAAAACBFdwAAAAAAAEIHAAAAAAAAAgcAAAAAAAAAAA==",
-         "mimeType": "image/x-mkcd-f4",
-         "tilemapTile": true,
-         "displayName": "flowers"
-    }
+        "data": "hwQQABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "tilemapTile": true,
+        "displayName": "flowers"
+    },
     "level1": {
         "id": "level1",
         "mimeType": "application/mkcd-tilemap",
@@ -285,7 +285,8 @@
             "sprites.swamp.swampTile3",
             "myTiles.tile6",
             "myTiles.tile8",
-            "myTiles.tile9"
+            "myTiles.tile9",
+            "myTiles.tile10"
         ],
         "displayName": "level9"
     },
