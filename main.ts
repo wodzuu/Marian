@@ -370,7 +370,7 @@ function załadujPoziom (poziom: number) {
     pozycjaStartowaMariana = tiles.getTilesByType(sprites.swamp.swampTile3)[0]
     tiles.placeOnTile(marian, pozycjaStartowaMariana)
     tilesExtra.runTileAnimation(
-    sprites.swamp.swampTile13,
+    assets.tile`myTile7`,
     assets.animation`aniGrass0`,
     400,
     TileAnimationOrder.Random
