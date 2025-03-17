@@ -377,9 +377,15 @@ function załadujPoziom (poziom: number) {
     )
     tilesExtra.runTileAnimation(
     assets.tile`myTile4`,
-    assets.animation`aniGrass0`,
-    400,
-    TileAnimationOrder.Random
+    assets.animation`lava`,
+    100,
+    TileAnimationOrder.LoopAsync
+    )
+    tilesExtra.runTileAnimation(
+    assets.tile`flowers`,
+    assets.animation`flowersAni`,
+    150,
+    TileAnimationOrder.LoopAsync
     )
 }
 let pozycjaStartowaMariana: tiles.Location = null
