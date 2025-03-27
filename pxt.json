@@ -11,6 +11,7 @@
         "main.ts",
         "README.md",
         "assets.json",
+        "animations.g.jres",
         "tilemap.g.jres",
         "tilemap.g.ts",
         "images.g.jres",
