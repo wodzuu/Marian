@@ -33,17 +33,6 @@ namespace myImages {
 1 1 9 9 9 1 9 f 
 1 1 9 9 9 9 9 f 
 `;
-            case "tile8":
-            case "myTile8":return img`
-1 1 1 1 1 1 1 1 
-1 9 9 1 9 9 9 1 
-1 9 9 9 9 9 9 1 
-1 1 9 9 9 9 9 9 
-1 9 9 9 9 9 9 9 
-1 1 9 9 9 9 9 9 
-1 1 9 9 9 1 9 f 
-1 1 9 9 9 9 9 f 
-`;
         }
         return null;
     })
