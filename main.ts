@@ -9,7 +9,7 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     wGórę()
 })
 function stwórzMariana () {
-    marian = sprites.create(assets.image`Marian0`, SpriteKind.Player)
+    marian = sprites.create(marianek, SpriteKind.Player)
     mySprite = 0
     scene.cameraFollowSprite(marian)
     controller.moveSprite(marian, 100, 0)
@@ -399,6 +399,13 @@ let marianIdzieWLewo: animation.Animation = null
 let mySprite = 0
 let marian: Sprite = null
 let poziom = 0
+let marianek: Image = null
+marianek = img`
+    f c f c 
+    b f b f 
+    e d e d 
+    1 f 1 e 
+    `
 poziom = 0
 stwórzMariana()
 stwórzAnimacje()
