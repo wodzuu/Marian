@@ -15,19 +15,20 @@
         "tilemap.g.ts",
         "images.g.jres",
         "images.g.ts",
-        "tilesXtra.ts"
+        "tilesXtra.ts",
+        "custom.ts"
     ],
     "testFiles": [
         "test.ts"
     ],
     "targetVersions": {
-        "target": "2.0.40",
+        "target": "2.0.46",
         "targetId": "arcade"
     },
     "supportedTargets": [
         "arcade"
     ],
-    "preferredEditor": "blocksprj",
+    "preferredEditor": "tsprj",
     "palette": [
         "#000000",
         "#FFFFFF",

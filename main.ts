@@ -224,7 +224,8 @@ function wGórę () {
     }
 }
 function załadujPoziom (poziom: number) {
-    scroller.setLayerImage(scroller.BackgroundLayer.Layer0, img`
+    randomLevel = myCategory.randomTileMap(16, 16)
+scroller.setLayerImage(scroller.BackgroundLayer.Layer0, img`
         . . . . . . . . . . 
         . . . . . . . . . . 
         . . . . . . . . . . 
@@ -361,7 +362,7 @@ function załadujPoziom (poziom: number) {
             ................................................................................................................................................................
             ................................................................................................................................................................
             `)
-        tiles.setCurrentTilemap(tilemap`level9`)
+        tiles.setCurrentTilemap(randomLevel)
     } else if (poziom == 1) {
         scene.setBackgroundColor(15)
         tiles.setCurrentTilemap(tilemap`level0`)
@@ -400,6 +401,7 @@ let mySprite = 0
 let marian: Sprite = null
 let poziom = 0
 let marianek: Image = null
+let randomLevel: tiles.TileMapData = null
 marianek = img`
     f c f c 
     b f b f 
@@ -437,7 +439,7 @@ game.onUpdateInterval(1000, function () {
         tiles.setWallAt(value, false)
         tiles.setTileAt(value, myTiles.tile3)
     }
-    for (let value2 of tiles.getTilesByType(myTiles.tile4)) {
-        tiles.setTileAt(value2, myTiles.tile5)
+    for (let randomLevel2 of tiles.getTilesByType(myTiles.tile4)) {
+        tiles.setTileAt(randomLevel2, myTiles.tile5)
     }
 })
