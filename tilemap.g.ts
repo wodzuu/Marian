@@ -37,6 +37,18 @@ namespace myTiles {
     //% fixedInstance jres blockIdentity=images._tile
     export const tile20 = image.ofBuffer(hex``);
 
+    //% fixedInstance blockIdentity=images._tile
+    export const t1000 = img`
+    f c f c f c f c
+    b f b f b f b f
+    e d e d e d e d
+    1 f 1 e 1 f 1 e
+    1 f 1 e 1 f 1 e
+    1 f 1 e 1 f 1 e
+    1 f 1 e 1 f 1 e
+    1 f 1 e 1 f 1 e
+    `
+
     helpers._registerFactory("tilemap", function(name: string) {
         switch(helpers.stringTrim(name)) {
             case "level12":
@@ -148,6 +160,7 @@ namespace myTiles {
             case "tile16":return tile16;
             case "tree4":
             case "tile20":return tile20;
+            case "t1000": return t1000;
         }
         return null;
     })
