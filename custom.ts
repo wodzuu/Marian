@@ -24,7 +24,7 @@ const rooms = [
     1, 1, 3, 5, 0, 0, 0, 0, 0, 1, 0, 0, 5, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0,
     1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
-const wallTiles = new Set([1]);
+const wallTiles = new Set<number>([1]);
 
 //% color=#FF5733 icon="\uf11b" weight=100
 namespace myCategory {
