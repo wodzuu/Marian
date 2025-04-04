@@ -124,6 +124,7 @@ namespace myTiles {
     })
 
     helpers._registerFactory("tile", function(name: string) {
+        console.log('loading tile ' + name)
         switch(helpers.stringTrim(name)) {
             case "transparency16":return transparency16;
             case "myTile0":
