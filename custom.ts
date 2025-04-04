@@ -42,14 +42,14 @@ namespace myCategory {
     export function randomTileMap(width: number, height: number) {
         // var hexWidth = width.toString(16);
         // var hexHeigth = height.toString(16);
-        var width = 30
-        var height = 24
-        const b = Buffer.fromArray([width, 0, height, 0].concat(rooms))
-        const i = image.create(width, height)
+        const width_ = 30
+        const height_ = 24
+        const b = Buffer.fromArray([width_, 0, height_, 0].concat(rooms))
+        const i = image.create(width_, height_)
         i.fill(0)
-        for (let y = 0; y < height; y++) {
-            for (let x = 0; x < width; x++) {
-                if (wallTiles.indexOf(rooms[y * width + x]) >= 0) {
+        for (let y = 0; y < height_; y++) {
+            for (let x = 0; x < width_; x++) {
+                if (wallTiles.indexOf(rooms[y * width_ + x]) >= 0) {
                     i.setPixel(x, y, 2)
                 }
             }
