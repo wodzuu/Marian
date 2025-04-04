@@ -40,7 +40,7 @@ namespace myCategory {
     export function randomTileMap(width: number, height: number) {
         // var hexWidth = width.toString(16);
         // var hexHeigth = height.toString(16);
-        const b = Buffer.fromArray([30,0,24,0]+rooms)
+        const b = Buffer.fromArray([30,0,24,0].concat(rooms))
         const i = image.create(30,24)
         i.fill(0)
         i.setPixel(0,1, 2)
