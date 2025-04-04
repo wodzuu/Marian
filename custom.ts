@@ -24,6 +24,7 @@ const rooms = [
     1, 1, 3, 5, 0, 0, 0, 0, 0, 1, 0, 0, 5, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0,
     1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
+const wallTiles = [1]
 
 //% color=#FF5733 icon="\uf11b" weight=100
 namespace myCategory {
@@ -37,15 +38,22 @@ namespace myCategory {
         console.log(num);
     }
 
-    //% block="random tile map"
+    //% block="random tile map %width by %height"
     export function randomTileMap(width: number, height: number) {
         // var hexWidth = width.toString(16);
         // var hexHeigth = height.toString(16);
-        const b = Buffer.fromArray([30,0,24,0].concat(rooms))
-        const i = image.create(30,24)
+        var witdh = 30
+        var height = 24
+        const b = Buffer.fromArray([width, 0, height, 0].concat(rooms))
+        const i = image.create(witdh, height)
         i.fill(0)
-        i.setPixel(0,1, 2)
-        i.setPixel(1, 1, 2)
+        for (let y = 0; y < height; y++) {
+            for (let x = 0; x < witdh; x++) {
+                if (wallTiles.contains(rooms[y * witdh + x])) {
+                    i.setPixel(x, y, 2)
+                }
+            }
+        }
         return tiles.createTilemap(b, i, [myTiles.transparency16, myTiles.wall, myTiles.entrance, myTiles.exit, myTiles.tile1, myTiles.ladder, myTiles.tile1, myTiles.tile1, myTiles.tile1], TileScale.Eight);
     }
 }
