@@ -12,8 +12,8 @@ function stwórzMariana () {
     marian = sprites.create(marianek, SpriteKind.Player)
     mySprite = 0
     scene.cameraFollowSprite(marian)
-    controller.moveSprite(marian, 100, 0)
-    marian.ay = 300
+    controller.moveSprite(marian, 50, 0)
+    marian.ay = 150
 }
 scene.onOverlapTile(SpriteKind.Player, sprites.builtin.forestTiles0, function (sprite, location) {
     poziom = poziom + 1
@@ -215,11 +215,11 @@ function stwórzAnimacje () {
 }
 function wGórę () {
     if (marian.isHittingTile(CollisionDirection.Bottom)) {
-        marian.vy = -150
+        marian.vy = -100
         music.play(music.melodyPlayable(music.knock), music.PlaybackMode.InBackground)
     }
-    if (marian.tileKindAt(TileDirection.Center, assets.tile`myTile0`)) {
-        marian.y += -16
+    if (marian.tileKindAt(TileDirection.Center, assets.tile`ladder0`)) {
+        marian.y += -8
         marian.x = marian.tilemapLocation().x
     }
 }
@@ -269,11 +269,11 @@ let marianek: Image = null
 let randomLevel: tiles.TileMapData = null
 marianek = img`
     . . . . . . . . 
-    . . b f 2 2 . . 
-    . d e d 2 2 2 . 
-    . f 1 e 2 2 2 . 
-    . 2 2 2 2 2 2 . 
-    . 2 2 2 2 2 2 . 
+    . . 6 6 2 . . . 
+    . d 6 6 2 2 . . 
+    . . 6 6 2 2 . . 
+    . . 2 2 2 2 . . 
+    . . 2 2 2 2 . . 
     . . 2 2 2 2 . . 
     . . 4 . . 4 . . 
     `
@@ -290,7 +290,7 @@ game.onUpdate(function () {
     } else {
         animation.setAction(marian, ActionKind.Walking)
     }
-    if (marian.tileKindAt(TileDirection.Center, assets.tile`myTile0`)) {
+    if (marian.tileKindAt(TileDirection.Center, assets.tile`ladder0`)) {
         marian.ay = 0
         marian.vy = 0
     } else {
