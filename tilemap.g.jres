@@ -111,7 +111,7 @@
         "mimeType": "image/x-mkcd-f4",
         "tilemapTile": true,
         "displayName": "t1000"
-    }
+    },
     "level12": {
         "id": "level12",
         "mimeType": "application/mkcd-tilemap",
