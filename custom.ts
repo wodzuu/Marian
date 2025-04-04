@@ -45,6 +45,6 @@ namespace myCategory {
         i.fill(0)
         i.setPixel(0,1, 2)
         i.setPixel(1, 1, 2)
-        return tiles.createTilemap(b, i, [myTiles.transparency16, myTiles.tile21, sprites.swamp.swampTile3, myTiles.tile21, myTiles.tile1, myTiles.tile1, myTiles.tile1, myTiles.tile1, myTiles.tile1], TileScale.Eight);
+        return tiles.createTilemap(b, i, [myTiles.transparency16, myTiles.t2000, sprites.swamp.swampTile3, myTiles.t2000, myTiles.tile1, myTiles.tile1, myTiles.tile1, myTiles.tile1, myTiles.tile1], TileScale.Eight);
     }
 }
