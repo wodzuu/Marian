@@ -106,11 +106,29 @@
         "tilemapTile": true,
         "displayName": "tree4"
     },
-    "t2000": {
+    "wall": {
         "data": "hwQIAAgAAADd3d3dzcrM2826vNvNvLvczby73M26vNvNyszb3d3d3Q==",
         "mimeType": "image/x-mkcd-f4",
         "tilemapTile": true,
-        "displayName": "t1000"
+        "displayName": "wall"
+    },
+    "entrance": {
+        "data": "hwQIAAgAAADu/v//RET+/kRE7v5MRO7/Tu7v/kRETuRERE5E7OTsRA==",
+        "mimeType": "image/x-mkcd-f4",
+        "tilemapTile": true,
+        "displayName": "entrance"
+    },
+    "exit": {
+        "data": "hwQIAAgAAAAdDR0NHQ0dDR0NHQ0QABAAEAAQAAAAAAAAAAAAAAAAAA==",
+        "mimeType": "image/x-mkcd-f4",
+        "tilemapTile": true,
+        "displayName": "exit"
+    },
+    "ladder": {
+        "data": "hwQIAAgAAAAAAAAAAAAAAAAAAAAAAQABAAEAAdDR0NHQ0dDR0NHQ0Q==",
+        "mimeType": "image/x-mkcd-f4",
+        "tilemapTile": true,
+        "displayName": "ladder"
     },
     "level12": {
         "id": "level12",
