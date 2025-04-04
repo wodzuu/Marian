@@ -49,7 +49,7 @@ namespace myCategory {
         i.fill(0)
         for (let y = 0; y < height; y++) {
             for (let x = 0; x < width; x++) {
-                if (wallTiles.includes(rooms[y * width + x])) {
+                if (wallTiles.indexOf(rooms[y * width + x]) >= 0) {
                     i.setPixel(x, y, 2)
                 }
             }
