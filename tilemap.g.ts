@@ -153,7 +153,7 @@ namespace myTiles {
             case "tree4":
             case "tile20":return tile20;
             case "tile21":
-            case "t1000": return t1000;
+            case "t1000": return tile21;
         }
         return null;
     })
