@@ -24,7 +24,7 @@ const rooms = [
     1, 1, 3, 5, 0, 0, 0, 0, 0, 1, 0, 0, 5, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0,
     1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
-const wallTiles = new Set<number>([1]);
+const wallTiles = [1]
 
 //% color=#FF5733 icon="\uf11b" weight=100
 namespace myCategory {
@@ -49,7 +49,7 @@ namespace myCategory {
         i.fill(0)
         for (let y = 0; y < height; y++) {
             for (let x = 0; x < width; x++) {
-                if (wallTiles.has(rooms[y * width + x])) {
+                if (wallTiles.indexOf(rooms[y * width + x]) >= 0) {
                     i.setPixel(x, y, 2)
                 }
             }
