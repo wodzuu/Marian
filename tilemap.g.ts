@@ -44,6 +44,10 @@ namespace myTiles {
     export const entrance = image.ofBuffer(hex``);
     //% fixedInstance jres blockIdentity=images._tile
     export const exit = image.ofBuffer(hex``);
+    //% fixedInstance jres blockIdentity=images._tile
+    export const coin = image.ofBuffer(hex``);
+    //% fixedInstance jres blockIdentity=images._tile
+    export const spikes = image.ofBuffer(hex``);
 
     helpers._registerFactory("tilemap", function(name: string) {
         switch(helpers.stringTrim(name)) {
@@ -183,6 +187,10 @@ namespace myTiles {
             case "entrance":return entrance;
             case "exit0":
             case "exit":return exit;
+            case "coin0":
+            case "coin":return exit;
+            case "spikes0":
+            case "spikes":return exit;
         }
         return null;
     })
