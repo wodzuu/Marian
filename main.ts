@@ -226,7 +226,7 @@ function wGórę () {
 function załadujPoziom (poziom: number) {
     randomLevel = myCategory.randomTileMap(16, 16)
 if (poziom == 0) {
-        scene.setBackgroundColor(6)
+        scene.setBackgroundColor(15)
         tiles.setCurrentTilemap(randomLevel)
     } else if (poziom == 1) {
         scene.setBackgroundColor(15)
