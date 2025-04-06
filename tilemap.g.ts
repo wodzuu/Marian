@@ -39,8 +39,6 @@ namespace myTiles {
     //% fixedInstance jres blockIdentity=images._tile
     export const wall = image.ofBuffer(hex``);
     //% fixedInstance jres blockIdentity=images._tile
-    export const ladder = image.ofBuffer(hex``);
-    //% fixedInstance jres blockIdentity=images._tile
     export const entrance = image.ofBuffer(hex``);
     //% fixedInstance jres blockIdentity=images._tile
     export const exit = image.ofBuffer(hex``);
@@ -48,6 +46,8 @@ namespace myTiles {
     export const coin = image.ofBuffer(hex``);
     //% fixedInstance jres blockIdentity=images._tile
     export const spikes = image.ofBuffer(hex``);
+    //% fixedInstance jres blockIdentity=images._tile
+    export const ladder = image.ofBuffer(hex``);
 
     helpers._registerFactory("tilemap", function(name: string) {
         switch(helpers.stringTrim(name)) {
@@ -100,6 +100,44 @@ namespace myTiles {
 . . . . . . . . . . . . . . . . 
 2 2 . . 2 2 2 2 2 2 2 2 2 2 2 2 
 `, [myTiles.transparency16,myTiles.tile2,myTiles.tile1,sprites.castle.tilePath2,sprites.builtin.forestTiles0,sprites.swamp.swampTile3,myTiles.tile6,myTiles.tile8,myTiles.tile9,myTiles.tile11,myTiles.tile17,myTiles.tile18,myTiles.tile19,myTiles.tile20,myTiles.tile13], TileScale.Sixteen);
+            case "level3":
+            case "level3":return tiles.createTilemap(hex`1000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000`, img`
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+`, [myTiles.transparency16], TileScale.Sixteen);
+            case "level4":
+            case "level4":return tiles.createTilemap(hex`1000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000`, img`
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+`, [myTiles.transparency16], TileScale.Sixteen);
         }
         return null;
     })
@@ -143,8 +181,6 @@ namespace myTiles {
             case "tile20":return tile20;
             case "wall0":
             case "wall":return wall;
-            case "ladder0":
-            case "ladder":return ladder;
             case "entrance0":
             case "entrance":return entrance;
             case "exit0":
@@ -153,6 +189,8 @@ namespace myTiles {
             case "coin":return coin;
             case "spikes0":
             case "spikes":return spikes;
+            case "ladder0":
+            case "ladder":return ladder;
         }
         return null;
     })
