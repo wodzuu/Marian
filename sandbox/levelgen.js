@@ -45,10 +45,10 @@ const RoomCategory = {
 const roomSets = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 4, 0, 0, 0, 1, 1,
         1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0,
-        1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 5, 1,
+        1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5, 1,
         1, 1, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 4, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 5, 1,
         4, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 6, 0, 7, 0, 0, 5, 1,
-        0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 6, 1, 1, 1, 0, 0, 0, 0, 0, 4, 1, 0, 0, 1, 1, 1, 0, 0, 5, 4,
+        0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 6, 1, 1, 1, 0, 0, 0, 0, 0, 4, 1, 0, 0, 1, 1, 1, 0, 0, 5, 4,
         1, 1, 0, 0, 0, 0, 7, 0, 0, 6, 1, 4, 0, 0, 0, 0, 0, 0, 6, 1, 1, 0, 0, 0, 0, 0, 0, 1, 4, 1,
         1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 4, 1, 1, 0, 0, 0, 0, 1, 1,
         1, 1, 5, 0, 4, 0, 0, 0, 0, 0, 1, 1, 0, 0, 4, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 6, 0, 5, 0,
@@ -69,6 +69,20 @@ const roomSets = [
         1, 1, 1, 1, 1, 1, 1, 1, 6, 1, 1, 1, 1, 1, 1, 1, 1, 6, 6, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ]
 
+const Tiles = {
+    WALL: 1,
+    START: 2,
+    END: 3,
+    COIN: 4,
+    LADDER: 5,
+    SPIKE: 6,
+    SNAKE: 7,
+    BRICK: 16
+}
+
+const ROOM_WIDTH = 10
+const ROOM_HEIGHT = 8
+
 function chunkArray(arr, size) {
     const result = [];
     for (let i = 0; i < arr.length; i += size) {
@@ -81,8 +95,6 @@ class LevelGenerator {
     constructor(width = 4, height = 4, rooms = {}) {
         this.width = width;
         this.height = height;
-        this.roomWidth = 10;
-        this.roomHeight = 8;
     }
 
     generatePath() {
@@ -157,8 +169,6 @@ class LevelGenerator {
 
 class RoomCollection {
     constructor() {
-        this.roomWidth = 10;
-        this.roomHeight = 8;
         this.roomsX = 3
         this.roomsY = 3;
         this.roomTypeMappings = {}
@@ -179,9 +189,9 @@ class RoomCollection {
     }
 
     extractRoom(chunks, x, y) {
-        let skip = y * this.roomsX * this.roomHeight + x // TODO this could be pre-defined for 3x3 input
+        let skip = y * this.roomsX * ROOM_HEIGHT + x // TODO this could be pre-defined for 3x3 input
         let room = []
-        for (let i = 0; i < this.roomHeight; i++) {
+        for (let i = 0; i < ROOM_HEIGHT; i++) {
             room.push(chunks[skip + i * 3])
         }
         //console.log(room)
@@ -193,9 +203,9 @@ class RoomCollection {
         let doors = 0
         // top
         if (roomYX[0][4] !== 1 && roomYX[0][5] !== 1) doors += 1
-        if (roomYX[this.roomHeight - 1][4] !== 1 && roomYX[this.roomHeight - 1][5] !== 1) doors += 2
+        if (roomYX[ROOM_HEIGHT - 1][4] !== 1 && roomYX[ROOM_HEIGHT - 1][5] !== 1) doors += 2
         if (roomYX[2][0] !== 1 && roomYX[3][0] !== 1 && roomYX[4][0] !== 1 && roomYX[5][0] !== 1) doors += 4
-        if (roomYX[2][this.roomWidth - 1] !== 1 && roomYX[3][this.roomWidth - 1] !== 1 && roomYX[4][this.roomWidth - 1] !== 1 && roomYX[5][this.roomWidth - 1] !== 1) doors += 8
+        if (roomYX[2][ROOM_WIDTH - 1] !== 1 && roomYX[3][ROOM_WIDTH - 1] !== 1 && roomYX[4][ROOM_WIDTH - 1] !== 1 && roomYX[5][ROOM_WIDTH - 1] !== 1) doors += 8
         switch (doors) {
             case 0:
             case 1:
@@ -238,7 +248,7 @@ class RoomCollection {
     }
 
     addRooms(roomSet) {
-        var chunks = chunkArray(roomSet, this.roomWidth)
+        var chunks = chunkArray(roomSet, ROOM_WIDTH)
 
         for (let y = 0; y < this.roomsY; y++) {
             for (let x = 0; x < this.roomsX; x++) {
@@ -292,10 +302,10 @@ class LevelAssembler {
         }
     }
 
-    paintOver(level, levelWidth, room, posX, posY, width, height) {
-        for (let y = 0; y < height; y++) {
-            for (let x = 0; x < width; x++) {
-                let block = room[y * width + x]
+    paintOver(level, levelWidth, room, posX, posY) {
+        for (let y = 0; y < ROOM_HEIGHT; y++) {
+            for (let x = 0; x < ROOM_WIDTH; x++) {
+                let block = room[y * ROOM_WIDTH + x]
                 level[(posX + x) + (posY + y) * levelWidth] = block
             }
         }
@@ -314,20 +324,44 @@ class LevelAssembler {
             for (let x = 0; x < width; x++) {
                 let roomType = levelMap[x][y]
                 let room = roomCollection.getRandomRoomOfType(roomType)
-                //this.printRoom(room, roomCollection.roomWidth, roomCollection.roomHeight)
-                this.paintOver(level, levelWidth, room, x * roomCollection.roomWidth, y * roomCollection.roomHeight, roomCollection.roomWidth, roomCollection.roomHeight)
+                if (this.isStartRoom(path, x, y)) {
+                    this.injectTile(room, Tiles.START)
+                }
+                if (this.isEndRoom(path, x, y)) {
+                    this.injectTile(room, Tiles.END)
+                }
+                //this.printRoom(room, ROOM_WIDTH, ROOM_HEIGHT)
+                this.paintOver(level, levelWidth, room, x * ROOM_WIDTH, y * ROOM_HEIGHT, ROOM_WIDTH, ROOM_HEIGHT)
             }
         }
-        //this.printLevel(level, levelWidth, levelHeight)
+        this.printLevel(level, levelWidth, levelHeight)
         return level
     }
 
-    printRoom(room, roomWidth, roomHeight) {
+    isEndRoom(path, x, y) {
+        return path[path.length - 1][0] === x && path[path.length - 1][1] === y;
+    }
+
+    isStartRoom(path, x, y) {
+        return path[0][0] === x && path[0][1] === y;
+    }
+
+    injectTile(room, tile) {
+        let candidates = []
+        room.forEach((block, index) => {
+            if (block === Tiles.COIN) {
+                candidates.push(index)
+            }
+        })
+        room[candidates[Math.floor(Math.random() * candidates.length)]] = tile
+    }
+
+    printRoom(room) {
         console.log('room')
         for (let y = 0; y < roomHeight; y++) {
             let line = []
-            for (let x = 0; x < roomWidth; x++) {
-                line.push(room[y * roomWidth + x])
+            for (let x = 0; x < ROOM_WIDTH; x++) {
+                line.push(room[y * ROOM_HEIGHT + x])
             }
             console.log(line.join(''))
         }
@@ -340,6 +374,6 @@ roomSets.forEach(roomSet => roomCollection.addRooms(roomSet))
 let [levelMap, path] = new LevelGenerator(2, 2).generate()
 
 let level = new LevelAssembler().assemble(roomCollection, levelMap, path)
-console.log(level)
+console.log(path)
 
 // console.log(level.generate().map(row => row.join('')).join('\n'));
