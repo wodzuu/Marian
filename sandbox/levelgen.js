@@ -192,7 +192,8 @@ class RoomCollection {
         }
     }
 
-    addRoomType(roomType, room) {
+    addRoomType(room) {
+        const roomType = room.type
         if (!this.roomTypeMappings[roomType]) {
             this.roomTypeMappings[roomType] = [];
         }
@@ -206,56 +207,7 @@ class RoomCollection {
             room.push(chunks[skip + i * 3])
         }
         //console.log(room)
-        return room
-    }
-
-
-    checkRoomType(roomYX) {
-        let doors = 0
-        // top
-        if (roomYX[0][4] !== 1 && roomYX[0][5] !== 1) doors += 1
-        if (roomYX[ROOM_HEIGHT - 1][4] !== 1 && roomYX[ROOM_HEIGHT - 1][5] !== 1) doors += 2
-        if (roomYX[2][0] !== 1 && roomYX[3][0] !== 1 && roomYX[4][0] !== 1 && roomYX[5][0] !== 1) doors += 4
-        if (roomYX[2][ROOM_WIDTH - 1] !== 1 && roomYX[3][ROOM_WIDTH - 1] !== 1 && roomYX[4][ROOM_WIDTH - 1] !== 1 && roomYX[5][ROOM_WIDTH - 1] !== 1) doors += 8
-        switch (doors) {
-            case 0:
-            case 1:
-            case 2:
-            case 4:
-            case 8:
-                console.log("invalid room door configuration detected: " + doors)
-                return null
-            case 3:
-                return RoomType.TOP_BOTTOM
-            case 5:
-                return RoomType.TOP_LEFT
-            case 6:
-                return RoomType.BOTTOM_LEFT
-            case 7:
-                return RoomType.LEFT_TOP_BOTTOM
-            case 9:
-                return RoomType.TOP_RIGHT
-            case 10:
-                return RoomType.BOTTOM_RIGHT
-            case 11:
-                return RoomType.RIGHT_TOP_BOTTOM
-            case 12:
-                return RoomType.LEFT_RIGHT
-            case 13:
-                return RoomType.TOP_LEFT_RIGHT
-            case 14:
-                return RoomType.BOTTOM_LEFT_RIGHT
-            case 15:
-                return RoomType.ALL
-        }
-    }
-
-    mirror(room) {
-        let mirroredRoom = []
-        for (let i = 0; i < room.length; i++) {
-            mirroredRoom.push(room[i].slice().reverse())
-        }
-        return mirroredRoom
+        return room.flat()
     }
 
     addRooms(roomSet) {
@@ -263,20 +215,14 @@ class RoomCollection {
 
         for (let y = 0; y < this.roomsY; y++) {
             for (let x = 0; x < this.roomsX; x++) {
-                const roomYX = this.extractRoom(chunks, x, y);
-                const roomType = this.checkRoomType(roomYX);
-                this.addRoomType(roomType, roomYX.flat())
-                if (this.canBeMirrored(roomType)) {
-                    const additionalRoomYX = this.mirror(roomYX)
-                    const additionalRoomType = this.checkRoomType(additionalRoomYX);
-                    this.addRoomType(additionalRoomType, additionalRoomYX.flat())
+                const roomTiles = this.extractRoom(chunks, x, y);
+                const room = new Room(roomTiles)
+                this.addRoomType(room)
+                if (room.canBeMirrored()) {
+                    this.addRoomType(room.mirrorCopy())
                 }
             }
         }
-    }
-
-    canBeMirrored(roomType) {
-        return RoomCompatibility.LEFT_RIGHT.indexOf(roomType) < 0 && (RoomCompatibility.LEFT.indexOf(roomType) >= 0 || RoomCompatibility.RIGHT.indexOf(roomType) >= 0);
     }
 }
 
@@ -310,12 +256,12 @@ class LevelAssembler {
                 let roomType = levelMap[x][y]
                 let room = roomCollection.getRandomRoomOfType(roomType)
                 if (this.isStartRoom(path, x, y)) {
-                    this.injectTile(room, Tiles.START)
+                    room.setRoomCategory(RoomCategory.START)
                 }
                 if (this.isEndRoom(path, x, y)) {
-                    this.injectTile(room, Tiles.END)
+                    room.setRoomCategory(RoomCategory.EXIT)
                 }
-                //this.printRoom(room, ROOM_WIDTH, ROOM_HEIGHT)
+                //console.log(room)
                 level.setRoom(room, x, y)
             }
         }
@@ -329,15 +275,90 @@ class LevelAssembler {
     isStartRoom(path, x, y) {
         return path[0][0] === x && path[0][1] === y;
     }
+}
 
-    injectTile(room, tile) {
+class Room {
+    constructor(tiles) {
+        this.tiles = tiles;
+        this.type = this.checkRoomType();
+    }
+
+    tileTypeAt(x, y) {
+        return this.tiles[x + y * ROOM_WIDTH]
+    }
+
+    setRoomCategory(category) {
+        let tile = Tiles.WALL
+        switch (category) {
+            case RoomCategory.START:
+                tile = Tiles.START
+                break
+            case RoomCategory.EXIT:
+                tile = Tiles.END;
+                break;
+        }
+
         let candidates = []
-        room.forEach((block, index) => {
+        this.tiles.forEach((block, index) => {
             if (block === Tiles.COIN) {
                 candidates.push(index)
             }
         })
-        room[candidates[Math.floor(Math.random() * candidates.length)]] = tile
+        this.tiles[candidates[Math.floor(Math.random() * candidates.length)]] = tile
+    }
+
+    checkRoomType() {
+        let doors = 0
+        // top
+        if (this.tileTypeAt(4, 0) !== Tiles.WALL && this.tileTypeAt(5, 0) !== Tiles.WALL) doors += 1
+        if (this.tileTypeAt(4, ROOM_HEIGHT - 1) !== Tiles.WALL && this.tileTypeAt(5, ROOM_HEIGHT - 1) !== Tiles.WALL) doors += 2
+        if (this.tileTypeAt(0, 2) !== Tiles.WALL && this.tileTypeAt(0, 3) !== Tiles.WALL && this.tileTypeAt(0, 4) !== Tiles.WALL && this.tileTypeAt(0, 5) !== Tiles.WALL) doors += 4
+        if (this.tileTypeAt(ROOM_WIDTH - 1, 2) !== Tiles.WALL && this.tileTypeAt(ROOM_WIDTH - 1, 3) !== Tiles.WALL && this.tileTypeAt(ROOM_WIDTH - 1, 4) !== Tiles.WALL && this.tileTypeAt(ROOM_WIDTH - 1, 5) !== Tiles.WALL) doors += 8
+        switch (doors) {
+            case 0:
+            case 1:
+            case 2:
+            case 4:
+            case 8:
+                console.log("invalid room door configuration detected: " + doors)
+                return null
+            case 3:
+                return RoomType.TOP_BOTTOM
+            case 5:
+                return RoomType.TOP_LEFT
+            case 6:
+                return RoomType.BOTTOM_LEFT
+            case 7:
+                return RoomType.LEFT_TOP_BOTTOM
+            case 9:
+                return RoomType.TOP_RIGHT
+            case 10:
+                return RoomType.BOTTOM_RIGHT
+            case 11:
+                return RoomType.RIGHT_TOP_BOTTOM
+            case 12:
+                return RoomType.LEFT_RIGHT
+            case 13:
+                return RoomType.TOP_LEFT_RIGHT
+            case 14:
+                return RoomType.BOTTOM_LEFT_RIGHT
+            case 15:
+                return RoomType.ALL
+        }
+    }
+
+    mirrorCopy() {
+        let mirroredRoom = []
+        for (let y = 0; y < ROOM_HEIGHT; y++) {
+            for (let x = 0; x < ROOM_WIDTH; x++) {
+                mirroredRoom.push(this.tiles[(ROOM_WIDTH - x - 1) + (y * ROOM_WIDTH)])
+            }
+        }
+        return mirroredRoom
+    }
+
+    canBeMirrored() {
+        return RoomCompatibility.LEFT_RIGHT.indexOf(this.type) < 0 && (RoomCompatibility.LEFT.indexOf(this.type) >= 0 || RoomCompatibility.RIGHT.indexOf(this.type) >= 0);
     }
 }
 
@@ -370,7 +391,7 @@ class Level {
         let posY = roomPosY * ROOM_HEIGHT
         for (let y = 0; y < ROOM_HEIGHT; y++) {
             for (let x = 0; x < ROOM_WIDTH; x++) {
-                this.level[(posX + x) + (posY + y) * this.width] = room[y * ROOM_WIDTH + x]
+                this.level[(posX + x) + (posY + y) * this.width] = room.tileTypeAt(x,y)
             }
         }
     }
