@@ -91,6 +91,17 @@ function chunkArray(arr, size) {
     return result;
 }
 
+function printRoom(room) {
+    console.log('room')
+    for (let y = 0; y < ROOM_HEIGHT; y++) {
+        let line = []
+        for (let x = 0; x < ROOM_WIDTH; x++) {
+            line.push(room[y * ROOM_WIDTH + x])
+        }
+        console.log(line.join(''))
+    }
+}
+
 class LevelGenerator {
     constructor(width = 4, height = 4, rooms = {}) {
         this.width = width;
@@ -285,38 +296,12 @@ class LevelAssembler {
         }
     }
 
-    printLevel(level, width, height) {
-        console.log('level')
-        for (let y = 0; y < height; y++) {
-            let line = []
-            for (let x = 0; x < width; x++) {
-                line.push(level[y * width + x])
-                if (x % 10 === 9) {
-                    line.push(' ')
-                }
-            }
-            console.log(line.join(''))
-            if (y % 8 === 7) {
-                console.log('')
-            }
-        }
-    }
-
-    paintOver(level, levelWidth, room, posX, posY) {
-        for (let y = 0; y < ROOM_HEIGHT; y++) {
-            for (let x = 0; x < ROOM_WIDTH; x++) {
-                let block = room[y * ROOM_WIDTH + x]
-                level[(posX + x) + (posY + y) * levelWidth] = block
-            }
-        }
-    }
-
     assemble(roomCollection, levelMap, path) {
         let height = levelMap[0].length
         let width = levelMap.length
-        let levelWidth = width * 10;
-        let levelHeight = height * 8;
-        let level = Array.from({length: levelWidth * levelHeight}, () => 0);
+        let levelWidth = width * ROOM_WIDTH;
+        let levelHeight = height * ROOM_HEIGHT;
+        let level = new Level(levelWidth, levelHeight)
         //console.log(path)
         //this.printMap(levelMap)
 
@@ -331,10 +316,9 @@ class LevelAssembler {
                     this.injectTile(room, Tiles.END)
                 }
                 //this.printRoom(room, ROOM_WIDTH, ROOM_HEIGHT)
-                this.paintOver(level, levelWidth, room, x * ROOM_WIDTH, y * ROOM_HEIGHT, ROOM_WIDTH, ROOM_HEIGHT)
+                level.setRoom(room, x, y)
             }
         }
-        this.printLevel(level, levelWidth, levelHeight)
         return level
     }
 
@@ -355,15 +339,39 @@ class LevelAssembler {
         })
         room[candidates[Math.floor(Math.random() * candidates.length)]] = tile
     }
+}
 
-    printRoom(room) {
-        console.log('room')
-        for (let y = 0; y < roomHeight; y++) {
+class Level {
+    constructor(width, height) {
+        this.width = width;
+        this.height = height;
+        this.level = Array.from({length: width * height}, () => 0);
+    }
+
+    prettyPrint() {
+        console.log('level')
+        for (let y = 0; y < this.height; y++) {
             let line = []
-            for (let x = 0; x < ROOM_WIDTH; x++) {
-                line.push(room[y * ROOM_HEIGHT + x])
+            for (let x = 0; x < this.width; x++) {
+                line.push(this.level[y * this.width + x])
+                if (x % ROOM_WIDTH === 9) {
+                    line.push(' ')
+                }
             }
             console.log(line.join(''))
+            if (y % ROOM_HEIGHT === 7) {
+                console.log('')
+            }
+        }
+    }
+
+    setRoom(room, roomPosX, roomPosY) {
+        let posX = roomPosX * ROOM_WIDTH
+        let posY = roomPosY * ROOM_HEIGHT
+        for (let y = 0; y < ROOM_HEIGHT; y++) {
+            for (let x = 0; x < ROOM_WIDTH; x++) {
+                this.level[(posX + x) + (posY + y) * this.width] = room[y * ROOM_WIDTH + x]
+            }
         }
     }
 }
@@ -374,6 +382,7 @@ roomSets.forEach(roomSet => roomCollection.addRooms(roomSet))
 let [levelMap, path] = new LevelGenerator(2, 2).generate()
 
 let level = new LevelAssembler().assemble(roomCollection, levelMap, path)
+level.prettyPrint()
 console.log(path)
 
 // console.log(level.generate().map(row => row.join('')).join('\n'));
