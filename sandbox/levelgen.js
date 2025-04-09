@@ -77,7 +77,7 @@ const Tiles = {
     LADDER: 5,
     SPIKE: 6,
     SNAKE: 7,
-    BRICK: 16
+    BRICK: 8
 }
 
 const ROOM_WIDTH = 10
@@ -102,6 +102,40 @@ function printRoom(room) {
     }
 }
 
+class Path {
+    constructor(fromX, fromY) {
+        this.steps = [[fromX, fromY, '!']]
+    }
+
+    addStep(x, y) {
+        this.steps.push([x, y, '?'])
+    }
+
+    setCurrentRoomType(type) {
+        this.steps[this.steps.length - 1][2] = type
+    }
+
+    forEachStep(callback) {
+        this.steps.forEach(([x, y, roomType]) => callback(x, y));
+    }
+
+    getRoomTypeAt(x, y) {
+        for (let i = 0; i < this.steps.length; i++) {
+            if (x === this.steps[i][0] && y === this.steps[i][1]) {
+                return this.steps[i][2];
+            }
+        }
+    }
+
+    isEndRoom(x, y) {
+        return this.steps[this.steps.length - 1][0] === x && this.steps[this.steps.length - 1][1] === y;
+    }
+
+    isStartRoom(x, y) {
+        return this.steps[0][0] === x && this.steps[0][1] === y;
+    }
+}
+
 class LevelGenerator {
     constructor(width = 4, height = 4, rooms = {}) {
         this.width = width;
@@ -111,7 +145,7 @@ class LevelGenerator {
     generatePath() {
         let x = Math.floor(Math.random() * this.width);
         let y = 0;
-        let path = [[x, y, '!']];
+        let path = new Path(x, y)
 
         let visited = new Set([`${x},${y}`]);
         let prevDirection = null;
@@ -130,11 +164,9 @@ class LevelGenerator {
             visited.add(`${x},${y}`);
 
             if (!prevDirection) {
-                let first = path.pop();
-                if (dy === 1) first[2] = this.randomRoomType(RoomCompatibility.BOTTOM);
-                else if (dx === 1) first[2] = this.randomRoomType(RoomCompatibility.RIGHT);
-                else first[2] = this.randomRoomType(RoomCompatibility.LEFT);
-                path.push(first);
+                if (dy === 1) path.setCurrentRoomType(this.randomRoomType(RoomCompatibility.BOTTOM));
+                else if (dx === 1) path.setCurrentRoomType(this.randomRoomType(RoomCompatibility.RIGHT));
+                else path.setCurrentRoomType(this.randomRoomType(RoomCompatibility.LEFT));
             } else {
                 let [px, py] = prevDirection;
                 if (py === 0) {
@@ -147,19 +179,17 @@ class LevelGenerator {
                     else type = this.randomRoomType(RoomCompatibility.TOP_BOTTOM);
                 }
 
-                path[path.length - 1][2] = type;
+                path.setCurrentRoomType(type);
             }
 
-            path.push([x, y, '?']);
+            path.addStep(x, y)
             prevDirection = [dx, dy];
         }
 
         let [px, py] = prevDirection;
-        let last = path.pop();
-        if (py === 1) last[2] = this.randomRoomType(RoomCompatibility.TOP);
-        else if (px === 1) last[2] = this.randomRoomType(RoomCompatibility.LEFT);
-        else last[2] = this.randomRoomType(RoomCompatibility.RIGHT);
-        path.push(last);
+        if (py === 1) path.setCurrentRoomType(this.randomRoomType(RoomCompatibility.TOP));
+        else if (px === 1) path.setCurrentRoomType(this.randomRoomType(RoomCompatibility.LEFT));
+        else path.setCurrentRoomType(this.randomRoomType(RoomCompatibility.RIGHT));
 
         return path;
     }
@@ -171,8 +201,8 @@ class LevelGenerator {
     generate() {
         const roomGrid = Array.from({length: this.width}, () => Array.from({length: this.height}, () => this.randomRoomType()));
         let path = this.generatePath();
-        path.forEach(([x, y, roomType]) => {
-            roomGrid[x][y] = roomType;
+        path.forEachStep((x, y) => {
+            roomGrid[x][y] = path.getRoomTypeAt(x, y);
         });
         return [roomGrid, path];
     }
@@ -190,6 +220,11 @@ class RoomCollection {
         if (rooms) {
             return rooms[Math.floor(Math.random() * rooms.length)];
         }
+        console.log("Could not find room of type: " + roomType)
+        console.log("-----------")
+        console.log(this.roomTypeMappings)
+        console.log("-----------")
+
     }
 
     addRoomType(room) {
@@ -248,33 +283,24 @@ class LevelAssembler {
         let levelWidth = width * ROOM_WIDTH;
         let levelHeight = height * ROOM_HEIGHT;
         let level = new Level(levelWidth, levelHeight)
-        //console.log(path)
-        //this.printMap(levelMap)
 
         for (let y = 0; y < height; y++) {
             for (let x = 0; x < width; x++) {
                 let roomType = levelMap[x][y]
                 let room = roomCollection.getRandomRoomOfType(roomType)
-                if (this.isStartRoom(path, x, y)) {
+                if (path.isStartRoom(x, y)) {
                     room.setRoomCategory(RoomCategory.START)
                 }
-                if (this.isEndRoom(path, x, y)) {
+                if (path.isEndRoom(x, y)) {
                     room.setRoomCategory(RoomCategory.EXIT)
                 }
-                //console.log(room)
                 level.setRoom(room, x, y)
             }
         }
         return level
     }
 
-    isEndRoom(path, x, y) {
-        return path[path.length - 1][0] === x && path[path.length - 1][1] === y;
-    }
 
-    isStartRoom(path, x, y) {
-        return path[0][0] === x && path[0][1] === y;
-    }
 }
 
 class Room {
@@ -354,11 +380,13 @@ class Room {
                 mirroredRoom.push(this.tiles[(ROOM_WIDTH - x - 1) + (y * ROOM_WIDTH)])
             }
         }
-        return mirroredRoom
+        return new Room(mirroredRoom)
     }
 
     canBeMirrored() {
-        return RoomCompatibility.LEFT_RIGHT.indexOf(this.type) < 0 && (RoomCompatibility.LEFT.indexOf(this.type) >= 0 || RoomCompatibility.RIGHT.indexOf(this.type) >= 0);
+        let result = RoomCompatibility.LEFT_RIGHT.indexOf(this.type) < 0 && (RoomCompatibility.LEFT.indexOf(this.type) >= 0 || RoomCompatibility.RIGHT.indexOf(this.type) >= 0);
+        //console.log('can be mirrored', this.type, result)
+        return result;
     }
 }
 
@@ -391,19 +419,54 @@ class Level {
         let posY = roomPosY * ROOM_HEIGHT
         for (let y = 0; y < ROOM_HEIGHT; y++) {
             for (let x = 0; x < ROOM_WIDTH; x++) {
-                this.level[(posX + x) + (posY + y) * this.width] = room.tileTypeAt(x,y)
+                if (room === undefined) {
+                    console.log('room is undefined')
+                    return
+                }
+                this.level[(posX + x) + (posY + y) * this.width] = room.tileTypeAt(x, y)
             }
         }
+    }
+
+    getWalled() {
+        let result = Array.from({length: (this.width + 2) * (this.height + 2)}, () => 0);
+        for (let y = -1; y <= this.height; y++) {
+            for (let x = -1; x <= this.width; x++) {
+                if (y === -1 || y === this.height) {
+                    result[x + 1 + (y + 1) * (this.width + 2)] = Tiles.BRICK
+                } else if (x === -1 || x === this.width) {
+                    result[x + 1 + (y + 1) * (this.width + 2)] = Tiles.BRICK
+                } else {
+                    result[(x + 1) + (y + 1) * (this.width + 2)] = this.level[x + y * this.width]
+                }
+            }
+        }
+        return result;
+    }
+}
+
+function printRawLevel(tiles, width) {
+    width = width * ROOM_WIDTH + 2
+    let height = tiles.length / width
+    for (let y = 0; y < height; y++) {
+        let line = []
+        for (let x = 0; x < width; x++) {
+            line.push(tiles[x + y * width])
+        }
+        console.log(line.join(''))
     }
 }
 
 let roomCollection = new RoomCollection();
 roomSets.forEach(roomSet => roomCollection.addRooms(roomSet))
 
-let [levelMap, path] = new LevelGenerator(2, 2).generate()
+let width = 2
+let height = 2
+let [levelMap, path] = new LevelGenerator(width, height).generate()
 
 let level = new LevelAssembler().assemble(roomCollection, levelMap, path)
 level.prettyPrint()
 console.log(path)
+printRawLevel(level.getWalled(), width)
 
 // console.log(level.generate().map(row => row.join('')).join('\n'));
