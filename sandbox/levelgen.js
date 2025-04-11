@@ -77,7 +77,7 @@ const Tiles = {
     LADDER: 5,
     SPIKE: 6,
     SNAKE: 7,
-    BRICK: 8
+    BRICK: 1 // TODO should be 8
 }
 
 const ROOM_WIDTH = 10

@@ -6,4 +6,4 @@ docker run \
     -v $(pwd):/work \
     -w /work \
     node:22 \
-    node levelgen.js
+    bash -c 'npm install -D ts-node && npx ts-node levelgen.ts'
