@@ -1,5 +1,4 @@
 // Add your code here
-// Add your code here
 namespace Levelgen {
     class Set<T> {
         elements: Array<T>
@@ -14,7 +13,6 @@ namespace Levelgen {
 
         has(element: T) {
             for (let i = 0; i < this.elements.length; i++) {
-                console.log(i)
                 if (this.elements[i] === element) {
                     return true;
                 }
@@ -24,6 +22,10 @@ namespace Levelgen {
 
         size() {
             return this.elements.length
+        }
+
+        prettyPrint() {
+            console.log('Set ' + this.elements.join(','))
         }
     }
 
@@ -46,6 +48,20 @@ namespace Levelgen {
         LEFT_TOP_BOTTOM,
         RIGHT_TOP_BOTTOM,
         ALL
+    }
+
+    let RoomTypeRepresentation: { [key: number]: string } = {
+        0: "╝",
+        1: "╚",
+        2: "╗",
+        3: "╔",
+        4: "║",
+        5: "═",
+        6: "╩",
+        7: "╦",
+        8: "╣",
+        9: "╠",
+        10: "╬"
     }
 
     const RoomCompatibility = {
@@ -119,7 +135,7 @@ namespace Levelgen {
         }
     }
 
-    class Path {
+    export class Path {
         steps: PathSection[];
 
         constructor(fromX: number, fromY: number) {
@@ -154,6 +170,27 @@ namespace Levelgen {
 
         isStartRoom(x: number, y: number): boolean {
             return this.steps[0].x === x && this.steps[0].y === y;
+        }
+
+        prettyPrint() {
+            /*const lines = []
+            for (let i = 0; i < this.steps.length; i++) {
+                //console.log(this.steps[i].x + "," + this.steps[i].y + " " + RoomTypeRepresentation[this.steps[i].roomType])
+                let x = this.steps[i].x
+                let y = this.steps[i].y
+                let tile = RoomTypeRepresentation[this.steps[i].roomType]
+                while (y >= lines.length) {
+                    lines.push([' '])
+                }
+                while (x >= lines[y].length) {
+                    lines[y].push([' '])
+                }
+                lines[y][x] = tile
+            }
+            for (let i = 0; i < lines.length; i++) {
+                console.log(lines[i].join(''))
+            }*/
+            console.log('nope')
         }
     }
 
@@ -197,7 +234,7 @@ namespace Levelgen {
                     if (py === 0) {
                         type = this.randomRoomType(
                             dy === 1 ?
-                                (dx === 1 ? RoomCompatibility.BOTTOM_LEFT : RoomCompatibility.BOTTOM_RIGHT) :
+                                (px === 1 ? RoomCompatibility.BOTTOM_LEFT : RoomCompatibility.BOTTOM_RIGHT) :
                                 RoomCompatibility.LEFT_RIGHT
                         );
                     } else {
@@ -227,6 +264,7 @@ namespace Levelgen {
         }
 
         randomRoomType(roomTypes: Set<RoomType>): RoomType {
+            roomTypes.prettyPrint();
             return roomTypes.elements[Math.floor(Math.random() * roomTypes.size())];
         }
 

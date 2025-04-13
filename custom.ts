@@ -62,6 +62,8 @@ namespace myCategory {
         const height_ = walledLevel.height
         const width_ = walledLevel.width
 
+        path.prettyPrint()
+        // printRawLevel(walledLevel.level, walledLevel.width);
 
         //const room = rooms.slice()
         const i = image.create(width_, height_)
