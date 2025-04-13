@@ -42,35 +42,61 @@ namespace myCategory {
     }
 
     //% block="random tile map %width by %height"
-    export function randomTileMap(width: number, height: number) {
+    export function randomTileMap(width: number = 2, height: number = 2) {
         // var hexWidth = width.toString(16);
         // var hexHeigth = height.toString(16);
-        const width_ = 30
-        const height_ = 24
+        // const width_ = 30
+        // const height_ = 24
 
-        const room = rooms.slice()
+        console.log('here ' + width + ' ' + height)
+        const roomCollection = new Levelgen.RoomCollection();
+        roomSets.forEach(roomSet => roomCollection.addRooms(roomSet));
+        const [levelMap, path] = new Levelgen.LevelGenerator(width, height).generate();
+
+        const level = new Levelgen.LevelAssembler().assemble(roomCollection, levelMap, path);
+        //level.prettyPrint();
+        //console.log(path);
+        //printRawLevel(level.getWalled(), width);
+        const walledLevel = level.getWalled();
+        const map = walledLevel.level
+        const height_ = walledLevel.height
+        const width_ = walledLevel.width
+
+
+        //const room = rooms.slice()
         const i = image.create(width_, height_)
         i.fill(0)
         for (let y = 0; y < height_; y++) {
             for (let x = 0; x < width_; x++) {
                 const index = y * width_ + x;
-                if(room[index] == coin && Math.random() < 0.8){
-                    room[index] = 0;
+                let tile = map[index];
+                switch(tile){
+                    case Levelgen.Tiles.COIN:
+                        if(Math.random() < 0.8) tile = Levelgen.Tiles.NOTHING;
+                        break;
+                    case Levelgen.Tiles.SPIKES:
+                        if (Math.random() < 0.5) tile = Levelgen.Tiles.NOTHING;
+                        break;
+                    case Levelgen.Tiles.LADDER:
+                    case Levelgen.Tiles.WALL:
+                    case Levelgen.Tiles.END:
+                    case Levelgen.Tiles.START:
+                        break;
+                    case Levelgen.Tiles.BRICK:
+                        tile = Levelgen.Tiles.WALL
+                        break;
+                    default:
+                        tile = Levelgen.Tiles.NOTHING
                 }
-                if (room[index] == spikes && Math.random() < 0.5) {
-                    room[index] = 0;
-                }
-                if (room[index] == snake) {
-                    room[index] = 0; // remove all snakes
-                }
-                if (wallTiles.indexOf(room[index]) >= 0) {
+                map[index] = tile
+                if (Levelgen.isWalkableTileType(tile)) {
                     i.setPixel(x, y, 2)
                 }
             }
         }
 
 
-        const b = Buffer.fromArray([width_, 0, height_, 0].concat(room))
+        const b = Buffer.fromArray([width_, 0, height_, 0].concat(map))
         return tiles.createTilemap(b, i, [myTiles.transparency16, myTiles.wall, myTiles.entrance, myTiles.exit, myTiles.coin, myTiles.ladder, myTiles.spikes], TileScale.Eight);
     }
 }

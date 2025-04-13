@@ -43,7 +43,7 @@ function wGórę () {
 }
 function załadujPoziom (poziom: number) {
     game.splash("Poziom", poziom)
-    randomLevel = myCategory.randomTileMap(16, 16)
+    randomLevel = myCategory.randomTileMap(3, 3)
     scene.setBackgroundColor(15)
     tiles.setCurrentTilemap(randomLevel)
     pozycjaStartowaMariana = tiles.getTilesByType(assets.tile`entrance0`)[0]
@@ -71,6 +71,7 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`exit0`, function (sprite, loc
     poziom = poziom + 1
     załadujPoziom(poziom)
 })
+let hittingSpikes = 0
 let pozycjaStartowaMariana: tiles.Location = null
 let randomLevel: tiles.TileMapData = null
 let marianIdzieWLewo: animation.Animation = null
@@ -95,7 +96,6 @@ game.setGameOverEffect(true, effects.confetti)
 game.setGameOverMessage(true, "Brawo!")
 info.setLife(3)
 info.setScore(0)
-let hittingSpikes = 0
 game.onUpdate(function () {
     if (marian.vx < 0) {
         animation.setAction(marian, ActionKind.Walking)

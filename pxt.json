@@ -17,7 +17,8 @@
         "images.g.jres",
         "images.g.ts",
         "tilesXtra.ts",
-        "custom.ts"
+        "custom.ts",
+        "levelgen.ts"
     ],
     "testFiles": [
         "test.ts"
@@ -29,7 +30,7 @@
     "supportedTargets": [
         "arcade"
     ],
-    "preferredEditor": "blocksprj",
+    "preferredEditor": "tsprj",
     "palette": [
         "#000000",
         "#FFFFFF",
