@@ -41,6 +41,7 @@ namespace myCategory {
         console.log(num);
     }
 
+    //% block="tile right below %sprite"
     export function tileRightBelow(sprite: Sprite): Image {
         let spriteBottom = sprite.y + (sprite.height / 2)
         let feetLocation = tiles.locationAtWorld(player.x, spriteBottom + 1)
