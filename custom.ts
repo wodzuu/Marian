@@ -42,16 +42,33 @@ namespace myCategory {
     }
 
     //% block="is tile right below %sprite of type %tile"
+    //% tile.shadow=tilemap_tile_picker
+    //% sprite.shadow=variables_get
     export function tileRightBelow(sprite: Sprite, tile: Image): boolean {
         let spriteBottom = sprite.y + (sprite.height / 2)
         //let feetLocation = tiles.locationAtWorld(sprite.x, spriteBottom + 1)
         //return tiles.tileImageAtLocation(feetLocation)
 
         let col = Math.floor(sprite.x / 8)
-        let row = Math.floor((spriteBottom + 0) / 8)
+        let row = Math.floor(spriteBottom / 8)
 
         let loc = tiles.getTileLocation(col, row)
         return tiles.tileAtLocationEquals(loc, tile)
+    }
+
+    //% block="is tile under or behind %sprite of type %tile"
+    //% tile.shadow=tilemap_tile_picker
+    //% sprite.shadow=variables_get
+    export function isOnTop(sprite: Sprite, tile: Image): boolean {
+        let spriteBottom = sprite.y + (sprite.height / 2)
+        //let feetLocation = tiles.locationAtWorld(sprite.x, spriteBottom + 1)
+        //return tiles.tileImageAtLocation(feetLocation)
+
+        let col = Math.floor(sprite.x / 8)
+        let row = Math.floor(spriteBottom / 8)
+
+        let loc = tiles.getTileLocation(col, row)
+        return tiles.tileAtLocationEquals(loc, tile) || sprite.tileKindAt(TileDirection.Center, tile)
     }
 
     //% block="random tile map %width by %height"
