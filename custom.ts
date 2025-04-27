@@ -42,9 +42,7 @@ namespace myCategory {
     }
 
     //% block="is tile right below %sprite of type %tile"
-    //tile.shadow=tilemap_tile_picker
-    //sprite.shadow=variables_get
-    export function tileRightBelow(sprite: Sprite, tile: Image): boolean {
+    export function isOver(sprite: Sprite, tile: Image): boolean {
         let spriteBottom = sprite.y + (sprite.height / 2)
         //let feetLocation = tiles.locationAtWorld(sprite.x, spriteBottom + 1)
         //return tiles.tileImageAtLocation(feetLocation)
@@ -57,8 +55,6 @@ namespace myCategory {
     }
 
     //% block="is tile under or behind %sprite of type %tile"
-    //tile.shadow=tilemap_tile_picker
-    //sprite.shadow=variables_get
     export function isOnTop(sprite: Sprite, tile: Image): boolean {
         let spriteBottom = sprite.y + (sprite.height / 2)
         //let feetLocation = tiles.locationAtWorld(sprite.x, spriteBottom + 1)

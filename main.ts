@@ -5,9 +5,6 @@ enum ActionKind {
     WalkingLeft,
     WalkingRight
 }
-controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
-	
-})
 function stwórzMariana () {
     marian = sprites.create(marianek, SpriteKind.Player)
     mySprite = 0
@@ -15,11 +12,8 @@ function stwórzMariana () {
     controller.moveSprite(marian, 50, 0)
     marian.ay = 150
 }
-controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-	
-})
 function wDół () {
-    if (marian.tileKindAt(TileDirection.Center, assets.tile`ladder0`) || myCategory.tileRightBelow(marian, myTiles.ladder)) {
+    if (myCategory.isOnTop(marian, assets.tile`ladder0`)) {
         marian.y += 1
         marian.x = marian.tilemapLocation().x
     }
@@ -38,11 +32,11 @@ info.onLifeZero(function () {
     game.gameOver(false)
 })
 function wGórę () {
-    if (marian.isHittingTile(CollisionDirection.Bottom) || myCategory.tileRightBelow(marian, myTiles.ladder)) {
+    if (marian.isHittingTile(CollisionDirection.Bottom) || myCategory.isOnTop(marian, assets.tile`ladder0`)) {
         marian.vy = -100
         music.play(music.melodyPlayable(music.knock), music.PlaybackMode.InBackground)
     }
-    if (marian.tileKindAt(TileDirection.Center, assets.tile`ladder0`) || myCategory.tileRightBelow(marian, myTiles.ladder)) {
+    if (myCategory.isOnTop(marian, assets.tile`ladder0`)) {
         marian.y += -1
         marian.x = marian.tilemapLocation().x
     }
@@ -78,14 +72,13 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`exit0`, function (sprite, loc
     załadujPoziom(poziom)
 })
 let hittingSpikes = 0
-let tloc = false
 let pozycjaStartowaMariana: tiles.Location = null
 let randomLevel: tiles.TileMapData = null
 let marianIdzieWLewo: animation.Animation = null
 let mySprite = 0
-let marian: Sprite = null
 let poziom = 0
 let marianek: Image = null
+let marian: Sprite = null
 marianek = img`
     . . . . . . . . 
     . . . . . . . . 
@@ -104,7 +97,6 @@ game.setGameOverMessage(true, "Brawo!")
 info.setLife(3)
 info.setScore(0)
 game.onUpdate(function () {
-    tloc = myCategory.tileRightBelow(marian, myTiles.ladder)
     if (marian.vx < 0) {
         animation.setAction(marian, ActionKind.Walking)
     } else if (marian.vx > 0) {
@@ -112,7 +104,7 @@ game.onUpdate(function () {
     } else {
         animation.setAction(marian, ActionKind.Walking)
     }
-    if (myCategory.tileRightBelow(marian, myTiles.ladder)) {
+    if (myCategory.isOnTop(marian, assets.tile`ladder0`)) {
         marian.ay = 0
         marian.vy = 0
     } else {
@@ -133,8 +125,7 @@ game.onUpdate(function () {
 })
 game.onUpdateInterval(1000, function () {
     for (let value of tiles.getTilesByType(assets.tile`myTile3`)) {
-        tiles.setWallAt(value, false)
-        tiles.setTileAt(value, assets.tile`myTile1`)
+    	
     }
     for (let randomLevel2 of tiles.getTilesByType(assets.tile`myTile2`)) {
         tiles.setTileAt(randomLevel2, assets.tile`myTile3`)
