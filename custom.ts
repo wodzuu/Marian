@@ -42,7 +42,7 @@ namespace myCategory {
     }
 
     //% block="is tile right below %sprite of type %tile"
-    export function tileRightBelow(sprite: Sprite, tile: Image): Image {
+    export function tileRightBelow(sprite: Sprite, tile: Image): boolean {
         let spriteBottom = sprite.y + (sprite.height / 2)
         //let feetLocation = tiles.locationAtWorld(sprite.x, spriteBottom + 1)
         //return tiles.tileImageAtLocation(feetLocation)
