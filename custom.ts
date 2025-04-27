@@ -48,7 +48,7 @@ namespace myCategory {
         //return tiles.tileImageAtLocation(feetLocation)
 
         let col = Math.floor(sprite.x / 8)
-        let row = Math.floor((spriteBottom + 1) / 8)
+        let row = Math.floor((spriteBottom + 0) / 8)
 
         let loc = tiles.getTileLocation(col, row)
         return tiles.tileAtLocationEquals(loc, tile)
