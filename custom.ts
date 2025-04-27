@@ -41,8 +41,8 @@ namespace myCategory {
         console.log(num);
     }
 
-    //% block="tile right below %sprite"
-    export function tileRightBelow(sprite: Sprite): Image {
+    //% block="is tile right below %sprite of type %tile"
+    export function tileRightBelow(sprite: Sprite, tile: Image): Image {
         let spriteBottom = sprite.y + (sprite.height / 2)
         //let feetLocation = tiles.locationAtWorld(sprite.x, spriteBottom + 1)
         //return tiles.tileImageAtLocation(feetLocation)
@@ -50,7 +50,8 @@ namespace myCategory {
         let col = Math.floor(sprite.x / 8)
         let row = Math.floor((spriteBottom + 1) / 8)
 
-        return tiles.getTileLocation(col, row)
+        let loc = tiles.getTileLocation(col, row)
+        return tiles.tileAtLocationEquals(loc, tile)
     }
 
     //% block="random tile map %width by %height"
