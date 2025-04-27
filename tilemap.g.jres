@@ -106,12 +106,6 @@
         "tilemapTile": true,
         "displayName": "tree4"
     },
-    "wall": {
-        "data": "hwQIAAgAAADszuzMzuzOzs7szs7u7OzM7uzO7MzszMzs7OzO7Mzs7g==",
-        "mimeType": "image/x-mkcd-f4",
-        "tilemapTile": true,
-        "displayName": "wall0"
-    },
     "entrance": {
         "data": "hwQIAAgAAAAA4AAAAODu7gDu///g7v//4O7//wDu//8A4O7uAOAAAA==",
         "mimeType": "image/x-mkcd-f4",
@@ -141,6 +135,12 @@
         "mimeType": "image/x-mkcd-f4",
         "tilemapTile": true,
         "displayName": "ladder0"
+    },
+    "wall": {
+        "data": "hwQIAAgAAAD//////P/P/P/Mz/z/zP/////P/8/8///P/Pz//////w==",
+        "mimeType": "image/x-mkcd-f4",
+        "tilemapTile": true,
+        "displayName": "wall0"
     },
     "level12": {
         "id": "level12",
