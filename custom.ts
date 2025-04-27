@@ -46,8 +46,11 @@ namespace myCategory {
         let spriteBottom = sprite.y + (sprite.height / 2)
         //let feetLocation = tiles.locationAtWorld(sprite.x, spriteBottom + 1)
         //return tiles.tileImageAtLocation(feetLocation)
-        let tileBelow = tiles.locationXY(sprite.x, spriteBottom + 1)
-        return tileBelow
+
+        let col = Math.floor(sprite.x / 8)
+        let row = Math.floor((spriteBottom + 1) / 8)
+
+        return tiles.getTileLocation(col, row)
     }
 
     //% block="random tile map %width by %height"
