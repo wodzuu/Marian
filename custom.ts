@@ -31,7 +31,7 @@ const snake = 7
 
 enum GameTiles {
     NOTHING = 0,
-    WALL = 1,
+    WALL_1 = 1,
     START = 2,
     END = 3,
     COIN = 4,
@@ -39,7 +39,11 @@ enum GameTiles {
     SPIKES = 6,
     SNAKE = 7,
     BRICK = 8,
-    GROUND_A = 9,
+    GROUND_A1 = 9,
+    GROUND_A2 = 10,
+    GROUND_A3 = 11,
+    WALL_2 = 12,
+    WALL_3 = 13
 }
 
 const arcadeTiles = [
@@ -52,14 +56,22 @@ const arcadeTiles = [
     myTiles.spikes,
     myTiles.transparency16, // snake
     myTiles.transparency16, // brick
-    myTiles.groundA
+    myTiles.groundA1,
+    myTiles.groundA2,
+    myTiles.groundA3,
+    myTiles.wall2,
+    myTiles.wall3
 ]
 
 
 function isWalkableTileType(tile: GameTiles) {
-    return tile === GameTiles.WALL || 
+    return tile === GameTiles.WALL_1 || tile === GameTiles.WALL_2 || tile === GameTiles.WALL_3 ||
            tile === GameTiles.BRICK || 
-           tile === GameTiles.GROUND_A
+           tile === GameTiles.GROUND_A1 || tile === GameTiles.GROUND_A2 || tile === GameTiles.GROUND_A3
+}
+
+function random(array){
+    return array[Math.floor(Math.random() * array.length)];
 }
 
 //% color=#FF5733 icon="\uf11b" weight=100
@@ -145,9 +157,9 @@ namespace myCategory {
                         break;
                     case Levelgen.Tiles.WALL:
                         if (y > 0 && !Levelgen.isWalkableTileType(walledLevel.get(x, y - 1))) {
-                            tile = GameTiles.GROUND_A;
+                            tile = random(GameTiles.GROUND_A1, GameTiles.GROUND_A2, GameTiles.GROUND_A3);
                         } else {
-                            tile = GameTiles.WALL;
+                            tile = random(GameTiles.WALL_1, GameTiles.WALL_2, GameTiles.WALL_3);
                         }
                         break;
                     case Levelgen.Tiles.END:
