@@ -32,7 +32,7 @@ const snake = 7
 //% color=#FF5733 icon="\uf11b" weight=100
 namespace myCategory {
     //% block="console log %value"
-    export function console(value: any) {
+    export function logValue(value: any) {
         console.log(">" + value);
     }
 
@@ -44,7 +44,7 @@ namespace myCategory {
     //% block="tile right below %sprite"
     export function tileRightBelow(sprite: Sprite): Image {
         let spriteBottom = sprite.y + (sprite.height / 2)
-        let feetLocation = tiles.locationAtWorld(player.x, spriteBottom + 1)
+        let feetLocation = tiles.locationAtWorld(sprite.x, spriteBottom + 1)
         return tiles.tileImageAtLocation(feetLocation)
     }
 
