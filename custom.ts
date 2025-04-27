@@ -70,7 +70,7 @@ function isWalkableTileType(tile: GameTiles) {
            tile === GameTiles.GROUND_A1 || tile === GameTiles.GROUND_A2 || tile === GameTiles.GROUND_A3
 }
 
-function random(array){
+function random(array: any[]){
     return array[Math.floor(Math.random() * array.length)];
 }
 
@@ -157,9 +157,9 @@ namespace myCategory {
                         break;
                     case Levelgen.Tiles.WALL:
                         if (y > 0 && !Levelgen.isWalkableTileType(walledLevel.get(x, y - 1))) {
-                            tile = random(GameTiles.GROUND_A1, GameTiles.GROUND_A2, GameTiles.GROUND_A3);
+                            tile = random([GameTiles.GROUND_A1, GameTiles.GROUND_A2, GameTiles.GROUND_A3]);
                         } else {
-                            tile = random(GameTiles.WALL_1, GameTiles.WALL_2, GameTiles.WALL_3);
+                            tile = random([GameTiles.WALL_1, GameTiles.WALL_2, GameTiles.WALL_3]);
                         }
                         break;
                     case Levelgen.Tiles.END:
@@ -169,7 +169,7 @@ namespace myCategory {
                         tile = GameTiles.START;
                         break;
                     case Levelgen.Tiles.BRICK:
-                        tile = GameTiles.WALL
+                        tile = random([GameTiles.WALL_1, GameTiles.WALL_2, GameTiles.WALL_3]);
                         break;
                     default:
                         tile = GameTiles.NOTHING
