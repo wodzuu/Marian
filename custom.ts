@@ -31,14 +31,20 @@ const snake = 7
 
 //% color=#FF5733 icon="\uf11b" weight=100
 namespace myCategory {
-    //% block="say hello"
-    export function sayHello() {
-        console.log("Hello, MakeCode!");
+    //% block="console log %value"
+    export function console(value: any) {
+        console.log(">" + value);
     }
 
     //% block="show number %num"
     export function showNumber(num: number) {
         console.log(num);
+    }
+
+    export function tileRightBelow(sprite: Sprite): Image {
+        let spriteBottom = sprite.y + (sprite.height / 2)
+        let feetLocation = tiles.locationAtWorld(player.x, spriteBottom + 1)
+        return tiles.tileImageAtLocation(feetLocation)
     }
 
     //% block="random tile map %width by %height"
