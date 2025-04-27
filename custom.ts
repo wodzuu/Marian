@@ -44,8 +44,10 @@ namespace myCategory {
     //% block="tile right below %sprite"
     export function tileRightBelow(sprite: Sprite): Image {
         let spriteBottom = sprite.y + (sprite.height / 2)
-        let feetLocation = tiles.locationAtWorld(sprite.x, spriteBottom + 1)
-        return tiles.tileImageAtLocation(feetLocation)
+        //let feetLocation = tiles.locationAtWorld(sprite.x, spriteBottom + 1)
+        //return tiles.tileImageAtLocation(feetLocation)
+        let tileBelow = tiles.locationXY(sprite.x, spriteBottom + 1)
+        return tileBelow
     }
 
     //% block="random tile map %width by %height"
