@@ -201,8 +201,8 @@ namespace myTiles {
             case "ladder":return ladder;
             case "wall0":
             case "wall":return wall;
-            case "groundA0":
-            case "groundA":return groundA;
+            case "groundA1":
+            case "groundA":return groundA1;
         }
         return null;
     })
