@@ -140,7 +140,7 @@ namespace myCategory {
                         tile = GameTiles.LADDER;
                         break;
                     case Levelgen.Tiles.WALL:
-                        if (walledLevel.get(x, y - 1) == Levelgen.Tiles.WALL) {
+                        if (y > 0 && walledLevel.get(x, y - 1) == Levelgen.Tiles.WALL) {
                             tile = GameTiles.GROUND_A;
                         } else {
                             tile = GameTiles.WALL;
