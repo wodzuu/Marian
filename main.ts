@@ -34,7 +34,6 @@ info.onLifeZero(function () {
 function wGórę () {
     if (marian.isHittingTile(CollisionDirection.Bottom) || myCategory.isOnTop(marian, assets.tile`ladder0`)) {
         marian.vy = -100
-        music.play(music.melodyPlayable(music.knock), music.PlaybackMode.InBackground)
     }
     if (myCategory.isOnTop(marian, assets.tile`ladder0`)) {
         marian.y += -1
