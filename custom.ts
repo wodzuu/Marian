@@ -29,6 +29,22 @@ const coin = 4
 const spikes = 6
 const snake = 7
 
+enum GameTiles {
+    NOTHING = 0,
+    WALL = 1,
+    START = 2,
+    END = 3,
+    COIN = 4,
+    LADDER = 5,
+    SPIKES = 6,
+    SNAKE = 7,
+    BRICK = 8
+}
+
+function isWalkableTileType(tile: GameTiles) {
+    return tile === GameTiles.WALL || tile === GameTiles.BRICK
+}
+
 //% color=#FF5733 icon="\uf11b" weight=100
 namespace myCategory {
     //% block="console log %value"
@@ -100,24 +116,33 @@ namespace myCategory {
                 let tile = map[index];
                 switch(tile){
                     case Levelgen.Tiles.COIN:
-                        if(Math.random() < 0.8) tile = Levelgen.Tiles.NOTHING;
+                        if(Math.random() < 0.8) tile = GameTiles.NOTHING;
+                        else tile = GameTiles.COIN
                         break;
                     case Levelgen.Tiles.SPIKES:
                         if (Math.random() < 0.5) tile = Levelgen.Tiles.NOTHING;
+                        else tile = GameTiles.SPIKES
                         break;
                     case Levelgen.Tiles.LADDER:
+                        tile = GameTiles.LADDER;
+                        break;
                     case Levelgen.Tiles.WALL:
+                        tile = GameTiles.WALL;
+                        break;
                     case Levelgen.Tiles.END:
+                        tile = GameTiles.END;
+                        break;
                     case Levelgen.Tiles.START:
+                        tile = GameTiles.START;
                         break;
                     case Levelgen.Tiles.BRICK:
-                        tile = Levelgen.Tiles.WALL
+                        tile = GameTiles.WALL
                         break;
                     default:
-                        tile = Levelgen.Tiles.NOTHING
+                        tile = GameTiles.NOTHING
                 }
                 map[index] = tile
-                if (Levelgen.isWalkableTileType(tile)) {
+                if (isWalkableTileType(tile)) {
                     i.setPixel(x, y, 2)
                 }
             }
