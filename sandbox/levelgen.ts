@@ -1,60 +1,105 @@
+// Add your code here
+// Add your code here
 namespace Levelgen {
+    class Set<T> {
+        elements: Array<T>
+
+        constructor(init: T[]) {
+            this.elements = init
+        }
+
+        add(element: T) {
+            this.elements.push(element)
+        }
+
+        has(element: T) {
+            for (let i = 0; i < this.elements.length; i++) {
+                if (this.elements[i] === element) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        size() {
+            return this.elements.length
+        }
+
+        prettyPrint() {
+            console.log('Set', this.elements.join(','))
+        }
+    }
 
     enum Direction {
-        UP = "up",
-        DOWN = "down",
-        LEFT = "left",
-        RIGHT = "right"
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT,
     }
 
     enum RoomType {
-        TOP_LEFT = "╝",
-        TOP_RIGHT = "╚",
-        BOTTOM_LEFT = "╗",
-        BOTTOM_RIGHT = "╔",
-        TOP_BOTTOM = "║",
-        LEFT_RIGHT = "═",
-        TOP_LEFT_RIGHT = "╩",
-        BOTTOM_LEFT_RIGHT = "╦",
-        LEFT_TOP_BOTTOM = "╣",
-        RIGHT_TOP_BOTTOM = "╠",
-        ALL = "╬"
+        TOP_LEFT,
+        TOP_RIGHT,
+        BOTTOM_LEFT,
+        BOTTOM_RIGHT,
+        TOP_BOTTOM,
+        LEFT_RIGHT,
+        TOP_LEFT_RIGHT,
+        BOTTOM_LEFT_RIGHT,
+        LEFT_TOP_BOTTOM,
+        RIGHT_TOP_BOTTOM,
+        ALL
     }
 
-    const RoomCompatibility: Record<string, RoomType[]> = {
-        ALL: [RoomType.TOP_LEFT, RoomType.TOP_RIGHT, RoomType.BOTTOM_LEFT, RoomType.BOTTOM_RIGHT, RoomType.TOP_BOTTOM, RoomType.LEFT_RIGHT, RoomType.TOP_LEFT_RIGHT, RoomType.BOTTOM_LEFT_RIGHT, RoomType.LEFT_TOP_BOTTOM, RoomType.RIGHT_TOP_BOTTOM, RoomType.ALL],
-        TOP: [RoomType.TOP_LEFT, RoomType.TOP_RIGHT, RoomType.TOP_BOTTOM, RoomType.TOP_LEFT_RIGHT, RoomType.LEFT_TOP_BOTTOM, RoomType.RIGHT_TOP_BOTTOM, RoomType.ALL],
-        BOTTOM: [RoomType.BOTTOM_LEFT, RoomType.BOTTOM_RIGHT, RoomType.TOP_BOTTOM, RoomType.BOTTOM_LEFT_RIGHT, RoomType.LEFT_TOP_BOTTOM, RoomType.RIGHT_TOP_BOTTOM, RoomType.ALL],
-        LEFT: [RoomType.TOP_LEFT, RoomType.BOTTOM_LEFT, RoomType.LEFT_RIGHT, RoomType.TOP_LEFT_RIGHT, RoomType.BOTTOM_LEFT_RIGHT, RoomType.LEFT_TOP_BOTTOM, RoomType.ALL],
-        RIGHT: [RoomType.TOP_RIGHT, RoomType.BOTTOM_RIGHT, RoomType.LEFT_RIGHT, RoomType.TOP_LEFT_RIGHT, RoomType.BOTTOM_LEFT_RIGHT, RoomType.RIGHT_TOP_BOTTOM, RoomType.ALL],
-        TOP_LEFT: [RoomType.TOP_LEFT, RoomType.TOP_LEFT_RIGHT, RoomType.LEFT_TOP_BOTTOM, RoomType.ALL],
-        TOP_RIGHT: [RoomType.TOP_RIGHT, RoomType.TOP_LEFT_RIGHT, RoomType.RIGHT_TOP_BOTTOM, RoomType.ALL],
-        BOTTOM_LEFT: [RoomType.BOTTOM_LEFT, RoomType.BOTTOM_LEFT_RIGHT, RoomType.LEFT_TOP_BOTTOM, RoomType.ALL],
-        BOTTOM_RIGHT: [RoomType.BOTTOM_RIGHT, RoomType.BOTTOM_LEFT_RIGHT, RoomType.RIGHT_TOP_BOTTOM, RoomType.ALL],
-        TOP_BOTTOM: [RoomType.TOP_BOTTOM, RoomType.LEFT_TOP_BOTTOM, RoomType.RIGHT_TOP_BOTTOM, RoomType.ALL],
-        LEFT_RIGHT: [RoomType.LEFT_RIGHT, RoomType.TOP_LEFT_RIGHT, RoomType.BOTTOM_LEFT_RIGHT, RoomType.ALL]
+    let RoomTypeRepresentation: { [key: number]: string } = {
+        0: "╝",
+        1: "╚",
+        2: "╗",
+        3: "╔",
+        4: "║",
+        5: "═",
+        6: "╩",
+        7: "╦",
+        8: "╣",
+        9: "╠",
+        10: "╬"
+    }
+
+    const RoomCompatibility = {
+        ALL: new Set([RoomType.TOP_LEFT, RoomType.TOP_RIGHT, RoomType.BOTTOM_LEFT, RoomType.BOTTOM_RIGHT, RoomType.TOP_BOTTOM, RoomType.LEFT_RIGHT, RoomType.TOP_LEFT_RIGHT, RoomType.BOTTOM_LEFT_RIGHT, RoomType.LEFT_TOP_BOTTOM, RoomType.RIGHT_TOP_BOTTOM, RoomType.ALL]),
+        TOP: new Set([RoomType.TOP_LEFT, RoomType.TOP_RIGHT, RoomType.TOP_BOTTOM, RoomType.TOP_LEFT_RIGHT, RoomType.LEFT_TOP_BOTTOM, RoomType.RIGHT_TOP_BOTTOM, RoomType.ALL]),
+        BOTTOM: new Set([RoomType.BOTTOM_LEFT, RoomType.BOTTOM_RIGHT, RoomType.TOP_BOTTOM, RoomType.BOTTOM_LEFT_RIGHT, RoomType.LEFT_TOP_BOTTOM, RoomType.RIGHT_TOP_BOTTOM, RoomType.ALL]),
+        LEFT: new Set([RoomType.TOP_LEFT, RoomType.BOTTOM_LEFT, RoomType.LEFT_RIGHT, RoomType.TOP_LEFT_RIGHT, RoomType.BOTTOM_LEFT_RIGHT, RoomType.LEFT_TOP_BOTTOM, RoomType.ALL]),
+        RIGHT: new Set([RoomType.TOP_RIGHT, RoomType.BOTTOM_RIGHT, RoomType.LEFT_RIGHT, RoomType.TOP_LEFT_RIGHT, RoomType.BOTTOM_LEFT_RIGHT, RoomType.RIGHT_TOP_BOTTOM, RoomType.ALL]),
+        TOP_LEFT: new Set([RoomType.TOP_LEFT, RoomType.TOP_LEFT_RIGHT, RoomType.LEFT_TOP_BOTTOM, RoomType.ALL]),
+        TOP_RIGHT: new Set([RoomType.TOP_RIGHT, RoomType.TOP_LEFT_RIGHT, RoomType.RIGHT_TOP_BOTTOM, RoomType.ALL]),
+        BOTTOM_LEFT: new Set([RoomType.BOTTOM_LEFT, RoomType.BOTTOM_LEFT_RIGHT, RoomType.LEFT_TOP_BOTTOM, RoomType.ALL]),
+        BOTTOM_RIGHT: new Set([RoomType.BOTTOM_RIGHT, RoomType.BOTTOM_LEFT_RIGHT, RoomType.RIGHT_TOP_BOTTOM, RoomType.ALL]),
+        TOP_BOTTOM: new Set([RoomType.TOP_BOTTOM, RoomType.LEFT_TOP_BOTTOM, RoomType.RIGHT_TOP_BOTTOM, RoomType.ALL]),
+        LEFT_RIGHT: new Set([RoomType.LEFT_RIGHT, RoomType.TOP_LEFT_RIGHT, RoomType.BOTTOM_LEFT_RIGHT, RoomType.ALL])
     }
 
     enum RoomCategory {
-        PATH = "P",
-        START = "S",
-        EXIT = "E",
-        OTHER = "O"
+        PATH,
+        START,
+        EXIT,
+        OTHER,
     }
 
-    enum Tiles {
+    export enum Tiles {
+        NOTHING = 0,
         WALL = 1,
         START = 2,
         END = 3,
         COIN = 4,
         LADDER = 5,
-        SPIKE = 6,
+        SPIKES = 6,
         SNAKE = 7,
-        BRICK = 1
+        BRICK = 8
     }
 
     export const ROOM_WIDTH = 10;
-    const ROOM_HEIGHT = 8;
+    export const ROOM_HEIGHT = 8;
 
     function chunkArray(arr: number[], size: number): number[][] {
         const result: number[][] = [];
@@ -75,35 +120,77 @@ namespace Levelgen {
         }
     }
 
-    class Path {
-        steps: [number, number, RoomType][];
+    class PathSection {
+        x: number
+        y: number
+        roomType: RoomType
+
+        constructor(x: number, y: number) {
+            this.x = x;
+            this.y = y;
+            this.roomType = RoomType.ALL
+        }
+
+        setRoomType(t: RoomType) {
+            this.roomType = t;
+        }
+    }
+
+    export class Path {
+        steps: PathSection[];
 
         constructor(fromX: number, fromY: number) {
-            this.steps = [[fromX, fromY, RoomType.ALL]];
+            this.steps = [new PathSection(fromX, fromY)]
         }
 
         addStep(x: number, y: number): void {
-            this.steps.push([x, y, RoomType.ALL]);
+            this.steps.push(new PathSection(x, y));
         }
 
-        setCurrentRoomType(type: RoomType): void {
-            this.steps[this.steps.length - 1][2] = type;
+        setCurrentRoomType(roomType: RoomType): void {
+            this.steps[this.steps.length - 1].setRoomType(roomType);
         }
 
         forEachStep(callback: (x: number, y: number) => void): void {
-            this.steps.forEach(([x, y]) => callback(x, y));
+            if (this.steps != null) {
+                this.steps.forEach((step) => callback(step.x, step.y));
+            }
         }
 
         getRoomTypeAt(x: number, y: number): RoomType | undefined {
-            return this.steps.find(step => step[0] === x && step[1] === y)?.[2];
+            const step = this.steps.find(step => step.x === x && step.y === y)
+            if (step != null) {
+                return step.roomType;
+            }
+            return null;
         }
 
         isEndRoom(x: number, y: number): boolean {
-            return this.steps[this.steps.length - 1][0] === x && this.steps[this.steps.length - 1][1] === y;
+            return this.steps[this.steps.length - 1].x === x && this.steps[this.steps.length - 1].y === y;
         }
 
         isStartRoom(x: number, y: number): boolean {
-            return this.steps[0][0] === x && this.steps[0][1] === y;
+            return this.steps[0].x === x && this.steps[0].y === y;
+        }
+
+        prettyPrint() {
+            const lines = []
+            for(let i=0; i<this.steps.length; i++){
+                //console.log(this.steps[i].x + "," + this.steps[i].y + " " + RoomTypeRepresentation[this.steps[i].roomType])
+                let x = this.steps[i].x
+                let y = this.steps[i].y
+                let tile = RoomTypeRepresentation[this.steps[i].roomType]
+                while(y >= lines.length) {
+                    lines.push([' '])
+                }
+                while(x >= lines[y].length) {
+                    lines[y].push([' '])
+                }
+                lines[y][x] = tile
+            }
+            for(let i=0; i<lines.length; i++){
+                console.log(lines[i].join(''))
+            }
         }
     }
 
@@ -121,7 +208,8 @@ namespace Levelgen {
             let y = 0;
             let path = new Path(x, y);
 
-            let visited = new Set<string>([`${x},${y}`]);
+            let visited = new Set([]);
+            visited.add(`${x},${y}`)
             let prevDirection: [number, number] | null = null;
             let type: RoomType;
 
@@ -138,15 +226,17 @@ namespace Levelgen {
                 visited.add(`${x},${y}`);
 
                 if (!prevDirection) {
-                    const compat = dy === 1 ? RoomCompatibility.BOTTOM :
-                        dx === 1 ? RoomCompatibility.RIGHT : RoomCompatibility.LEFT;
-                    path.setCurrentRoomType(this.randomRoomType(compat));
+                    console.log('a', dx, dy)
+                    const compat = dy === 1 ? RoomCompatibility.BOTTOM : dx === 1 ? RoomCompatibility.RIGHT : RoomCompatibility.LEFT;
+                    const randomRoomType = this.randomRoomType(compat);
+                    path.setCurrentRoomType(randomRoomType);
                 } else {
                     const [px, py] = prevDirection;
+                    console.log('b', px, py, dx, dy)
                     if (py === 0) {
                         type = this.randomRoomType(
                             dy === 1 ?
-                                (dx === 1 ? RoomCompatibility.BOTTOM_LEFT : RoomCompatibility.BOTTOM_RIGHT) :
+                                (px === 1 ? RoomCompatibility.BOTTOM_LEFT : RoomCompatibility.BOTTOM_RIGHT) :
                                 RoomCompatibility.LEFT_RIGHT
                         );
                     } else {
@@ -165,6 +255,7 @@ namespace Levelgen {
 
             if (prevDirection) {
                 const [px, py] = prevDirection;
+                console.log('c', px, py)
                 path.setCurrentRoomType(this.randomRoomType(
                     py === 1 ? RoomCompatibility.TOP :
                         px === 1 ? RoomCompatibility.LEFT :
@@ -175,13 +266,14 @@ namespace Levelgen {
             return path;
         }
 
-        randomRoomType(roomTypes: RoomType[] = RoomCompatibility.ALL): RoomType {
-            return roomTypes[Math.floor(Math.random() * roomTypes.length)];
+        randomRoomType(roomTypes: Set<RoomType>): RoomType {
+            roomTypes.prettyPrint();
+            return roomTypes.elements[Math.floor(Math.random() * roomTypes.size())];
         }
 
         generate(): [RoomType[][], Path] {
-            const roomGrid: RoomType[][] = Array.from({length: this.width}, () =>
-                Array.from({length: this.height}, () => this.randomRoomType())
+            const roomGrid: RoomType[][] = arrayFrom(this.width, () =>
+                arrayFrom(this.height, () => this.randomRoomType(RoomCompatibility.ALL))
             );
             let path = this.generatePath();
             path.forEachStep((x, y) => {
@@ -192,16 +284,31 @@ namespace Levelgen {
         }
     }
 
+    function arrayFrom<typ>(length: number, initializer: () => typ) {
+        const result: typ[] = []
+        for (let i = 0; i < length; i++) {
+            result.push(initializer())
+        }
+        return result;
+    }
+
     export class RoomCollection {
-        roomsX = 3;
-        roomsY = 3;
-        roomTypeMappings: Record<RoomType, Room[]> = {} as Record<RoomType, Room[]>;
+        roomsX: number
+        roomsY: number
+
+        constructor() {
+            this.roomsX = 3;
+            this.roomsY = 3;
+        }
+
+        roomTypeMappings: { [key: number]: Room[] } = {}
 
         getRandomRoomOfType(roomType: RoomType): Room | undefined {
             const rooms = this.roomTypeMappings[roomType];
             if (rooms) {
-                return rooms[Math.floor(Math.random() * rooms.length)];
+                return rooms[Math.floor(Math.random() * rooms.length)].copy()
             }
+            return null
             console.error(`Could not find room of type: ${roomType}`);
         }
 
@@ -249,7 +356,7 @@ namespace Levelgen {
             for (let y = 0; y < height; y++) {
                 let line: string[] = [];
                 for (let x = 0; x < width; x++) {
-                    line.push(roomGrid[x][y]);
+                    line.push(roomGrid[x][y].toString());
                 }
                 console.log(line.join(''));
             }
@@ -361,9 +468,13 @@ namespace Levelgen {
             return new Room(mirroredRoom);
         }
 
+        copy(): Room {
+            return new Room(this.tiles.slice())
+        }
+
         canBeMirrored(): boolean {
-            return !RoomCompatibility.LEFT_RIGHT.includes(this.type) &&
-                (RoomCompatibility.LEFT.includes(this.type) || RoomCompatibility.RIGHT.includes(this.type));
+            return !RoomCompatibility.LEFT_RIGHT.has(this.type) &&
+                (RoomCompatibility.LEFT.has(this.type) || RoomCompatibility.RIGHT.has(this.type));
         }
     }
 
@@ -372,10 +483,14 @@ namespace Levelgen {
         height: number;
         level: number[];
 
-        constructor(width: number, height: number) {
+        constructor(width: number, height: number, array: number[] = null) {
             this.width = width;
             this.height = height;
-            this.level = Array(width * height).fill(0);
+            if (array !== null) {
+                this.level = array;
+            } else {
+                this.level = arrayFrom(width * height, () => 0)
+            }
         }
 
         prettyPrint(): void {
@@ -401,8 +516,8 @@ namespace Levelgen {
             }
         }
 
-        getWalled(): number[] {
-            const result: number[] = Array((this.width + 2) * (this.height + 2)).fill(0);
+        getWalled(): Level {
+            const result: number[] = arrayFrom((this.width + 2) * (this.height + 2), () => 0);
             for (let y = -1; y <= this.height; y++) {
                 for (let x = -1; x <= this.width; x++) {
                     const index = (x + 1) + (y + 1) * (this.width + 2);
@@ -413,8 +528,16 @@ namespace Levelgen {
                     }
                 }
             }
-            return result;
+            return new Level(this.width + 2, this.height + 2, result);
         }
+
+        get(x,y){
+            return this.level[x + y * this.width]
+        }
+    }
+
+    export function isWalkableTileType(tile: Tiles) {
+        return tile === Tiles.WALL || tile === Tiles.BRICK
     }
 }
 
@@ -446,12 +569,18 @@ const roomSets: number[][] = [
 ];
 
 function printRawLevel(tiles: number[], width: number): void {
-    const levelWidth = width * Levelgen.ROOM_WIDTH + 2;
-    const height = tiles.length / levelWidth;
+    const height = tiles.length / width;
     for (let y = 0; y < height; y++) {
         let line: string[] = [];
-        for (let x = 0; x < levelWidth; x++) {
-            line.push(tiles[x + y * levelWidth].toString());
+        for (let x = 0; x < width; x++) {
+            const tile = tiles[x + y * width];
+            if (tile === Levelgen.Tiles.END || tile === Levelgen.Tiles.START) {
+                line.push('\x1b[31m');
+                line.push(tile.toString());
+                line.push('\x1b[0m');
+            } else {
+                line.push(tile.toString());
+            }
         }
         console.log(line.join(''));
     }
@@ -460,11 +589,13 @@ function printRawLevel(tiles: number[], width: number): void {
 const roomCollection = new Levelgen.RoomCollection();
 roomSets.forEach(roomSet => roomCollection.addRooms(roomSet));
 
-const width = 2;
-const height = 2;
+const width = 3;
+const height = 3;
 const [levelMap, path] = new Levelgen.LevelGenerator(width, height).generate();
 
-const level = new Levelgen.LevelAssembler().assemble(roomCollection, levelMap, path);
-level.prettyPrint();
-console.log(path);
-printRawLevel(level.getWalled(), width);
+// const level = new Levelgen.LevelAssembler().assemble(roomCollection, levelMap, path);
+// level.prettyPrint();
+//
+// const walled = level.getWalled()
+// printRawLevel(walled.level, walled.width);
+path.prettyPrint()
