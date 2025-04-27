@@ -39,7 +39,7 @@ enum GameTiles {
     SPIKES = 6,
     SNAKE = 7,
     BRICK = 8,
-    GROUND = 9,
+    GROUND_A = 9,
 }
 
 const arcadeTiles = [
@@ -127,9 +127,9 @@ namespace myCategory {
             for (let x = 0; x < width_; x++) {
                 const index = y * width_ + x;
                 let tile = map[index];
-                switch(tile){
+                switch (tile) {
                     case Levelgen.Tiles.COIN:
-                        if(Math.random() < 0.8) tile = GameTiles.NOTHING;
+                        if (Math.random() < 0.8) tile = GameTiles.NOTHING;
                         else tile = GameTiles.COIN
                         break;
                     case Levelgen.Tiles.SPIKES:
@@ -140,7 +140,11 @@ namespace myCategory {
                         tile = GameTiles.LADDER;
                         break;
                     case Levelgen.Tiles.WALL:
-                        tile = GameTiles.WALL;
+                        if (walledLevel.get(x, y - 1) == Levelgen.Tiles.WALL) {
+                            tile = GameTiles.GROUND_A;
+                        } else {
+                            tile = GameTiles.WALL;
+                        }
                         break;
                     case Levelgen.Tiles.END:
                         tile = GameTiles.END;
