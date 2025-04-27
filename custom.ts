@@ -50,12 +50,16 @@ const arcadeTiles = [
     myTiles.coin,
     myTiles.ladder,
     myTiles.spikes,
+    myTiles.transparency16, // snake
+    myTiles.transparency16, // brick
     myTiles.groundA
 ]
 
 
 function isWalkableTileType(tile: GameTiles) {
-    return tile === GameTiles.WALL || tile === GameTiles.BRICK
+    return tile === GameTiles.WALL || 
+           tile === GameTiles.BRICK || 
+           tile === GameTiles.GROUND_A
 }
 
 //% color=#FF5733 icon="\uf11b" weight=100
@@ -113,7 +117,7 @@ namespace myCategory {
         //console.log(path);
         //printRawLevel(level.getWalled(), width);
         const walledLevel = level.getWalled();
-        const map = walledLevel.level
+        const map = walledLevel.getRaw()
         const height_ = walledLevel.height
         const width_ = walledLevel.width
 
@@ -140,7 +144,7 @@ namespace myCategory {
                         tile = GameTiles.LADDER;
                         break;
                     case Levelgen.Tiles.WALL:
-                        if (y > 0 && walledLevel.get(x, y - 1) == Levelgen.Tiles.WALL) {
+                        if (y > 0 && !Levelgen.isWalkableTileType(walledLevel.get(x, y - 1))) {
                             tile = GameTiles.GROUND_A;
                         } else {
                             tile = GameTiles.WALL;
@@ -167,6 +171,6 @@ namespace myCategory {
 
 
         const b = Buffer.fromArray([width_, 0, height_, 0].concat(map))
-        return tiles.createTilemap(b, i, [myTiles.transparency16, myTiles.wall, myTiles.entrance, myTiles.exit, myTiles.coin, myTiles.ladder, myTiles.spikes], TileScale.Eight);
+        return tiles.createTilemap(b, i, arcadeTiles, TileScale.Eight);
     }
 }

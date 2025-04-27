@@ -527,6 +527,14 @@ namespace Levelgen {
             }
             return new Level(this.width + 2, this.height + 2, result);
         }
+
+        get(x: number, y: number) {
+            return this.level[x + y * this.width]
+        }
+
+        getRaw() {
+            return this.level.slice()
+        }
     }
 
     export function isWalkableTileType(tile: Tiles) {
