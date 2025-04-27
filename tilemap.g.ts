@@ -48,6 +48,8 @@ namespace myTiles {
     export const ladder = image.ofBuffer(hex``);
     //% fixedInstance jres blockIdentity=images._tile
     export const wall = image.ofBuffer(hex``);
+    //% fixedInstance jres blockIdentity=images._tile
+    export const groundA = image.ofBuffer(hex``);
 
     helpers._registerFactory("tilemap", function(name: string) {
         switch(helpers.stringTrim(name)) {

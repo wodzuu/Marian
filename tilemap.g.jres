@@ -142,6 +142,12 @@
         "tilemapTile": true,
         "displayName": "wall0"
     },
+    "groundA": {
+        "data": "hwQIAAgAAAD//////P/P/P/Mz/z/zP/////P/8/8///P/Pz//////w==",
+        "mimeType": "image/x-mkcd-f4",
+        "tilemapTile": true,
+        "displayName": "groundA0"
+    },
     "level12": {
         "id": "level12",
         "mimeType": "application/mkcd-tilemap",

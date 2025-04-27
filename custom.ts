@@ -38,8 +38,21 @@ enum GameTiles {
     LADDER = 5,
     SPIKES = 6,
     SNAKE = 7,
-    BRICK = 8
+    BRICK = 8,
+    GROUND = 9,
 }
+
+const arcadeTiles = [
+    myTiles.transparency16,
+    myTiles.wall,
+    myTiles.entrance,
+    myTiles.exit,
+    myTiles.coin,
+    myTiles.ladder,
+    myTiles.spikes,
+    myTiles.groundA
+]
+
 
 function isWalkableTileType(tile: GameTiles) {
     return tile === GameTiles.WALL || tile === GameTiles.BRICK
