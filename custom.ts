@@ -86,6 +86,21 @@ namespace myCategory {
         console.log(num);
     }
 
+    //% block="is the %sprite at tile edge or in front of a wall"
+    export function isAtTheEdge(sprite: Sprite): boolean {
+        let spriteLeft = sprite.x - (sprite.width / 2)
+        let spriteRight = sprite.x + (sprite.width / 2)
+        let spriteBottom = sprite.y + (sprite.height / 2)
+        
+        let colLeft = Math.floor((spriteLeft-1) / 8)
+        let colRight = Math.floor((spriteRight+1) / 8)
+        let rowBelow = Math.floor((spriteBottom+1) / 8)
+        let row = Math.floor((sprite.y) / 8)
+
+        return !tiles.tileAtLocationIsWall(tiles.getTileLocation(colLeft, rowBelow)) || !tiles.tileAtLocationIsWall(tiles.getTileLocation(colRight, rowBelow))
+             || tiles.tileAtLocationIsWall(tiles.getTileLocation(colLeft, row)) || tiles.tileAtLocationIsWall(tiles.getTileLocation(colRight, row))
+    }
+
     //% block="is tile right below %sprite of type %tile"
     export function isOver(sprite: Sprite, tile: Image): boolean {
         let spriteBottom = sprite.y + (sprite.height / 2)
