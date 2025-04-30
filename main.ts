@@ -225,6 +225,7 @@ function załadujPoziom (poziom: number) {
         )
         tiles.placeOnTile(snakeSprite, value)
         tiles.setTileAt(value, assets.tile`myTile1`)
+        snakeSprite.vx = Math.randomRange(-30, 30)
     }
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`exit0`, function (sprite, location) {
@@ -296,6 +297,16 @@ game.onUpdate(function () {
             info.changeLifeBy(-1)
             hittingSpikes = 1
             marian.vy = -80
+        }
+    }
+})
+// bumper movement
+game.onUpdate(function () {
+    for (let value9 of sprites.allOfKind(SpriteKind.Enemy)) {
+        if (value9.isHittingTile(CollisionDirection.Left)) {
+            value9.vx = Math.randomRange(30, 60)
+        } else if (value9.isHittingTile(CollisionDirection.Right)) {
+            value9.vx = Math.randomRange(-60, -30)
         }
     }
 })
