@@ -172,6 +172,12 @@
         "tilemapTile": true,
         "displayName": "wall4"
     },
+    "snake": {
+        "data": "hwQIAAgAAAD/////z//P///M////zP/8/////8/8z//P/P///////w==",
+        "mimeType": "image/x-mkcd-f4",
+        "tilemapTile": true,
+        "displayName": "snake0"
+    },
     "level12": {
         "id": "level12",
         "mimeType": "application/mkcd-tilemap",

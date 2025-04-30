@@ -58,6 +58,8 @@ namespace myTiles {
     export const wall2 = image.ofBuffer(hex``);
     //% fixedInstance jres blockIdentity=images._tile
     export const wall3 = image.ofBuffer(hex``);
+    //% fixedInstance jres blockIdentity=images._tile
+    export const snake = image.ofBuffer(hex``);
 
     helpers._registerFactory("tilemap", function(name: string) {
         switch(helpers.stringTrim(name)) {
