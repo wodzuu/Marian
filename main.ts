@@ -18,12 +18,63 @@ function wDół () {
         marian.x = marian.tilemapLocation().x
     }
 }
-scene.onOverlapTile(SpriteKind.Player, assets.tile`coin0`, function (sprite, location) {
-    info.changeScoreBy(1)
-    tiles.setTileAt(location, assets.tile`transparency16`)
-})
 function stwórzAnimacje () {
     marianIdzieWLewo = animation.createAnimation(ActionKind.Walking, 100)
+    coinAnimation = animation.createAnimation(ActionKind.Walking, 100)
+    coinAnimation.addAnimationFrame(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . 3 3 3 . . . . . . . . . . . 
+        . . 3 3 3 3 . . . . . . . . . . 
+        . . 3 3 3 . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `)
+    coinAnimation.addAnimationFrame(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . 3 3 3 . . . . . . . . . . . 
+        . . 3 3 3 3 . . . . . . . . . . 
+        . . 3 3 3 . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `)
+    coinAnimation.addAnimationFrame(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . 3 3 3 . . . . . . . . . . . 
+        . . 3 3 3 3 . . . . . . . . . . 
+        . . 3 3 3 . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `)
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`spikes0`, function (sprite, location) {
 	
@@ -34,46 +85,109 @@ info.onLifeZero(function () {
 function wGórę () {
     if (marian.isHittingTile(CollisionDirection.Bottom) || myCategory.isOnTop(marian, assets.tile`ladder0`)) {
         marian.vy = -100
-        music.play(music.melodyPlayable(music.knock), music.PlaybackMode.InBackground)
     }
     if (myCategory.isOnTop(marian, assets.tile`ladder0`)) {
         marian.y += -1
         marian.x = marian.tilemapLocation().x
     }
 }
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
+    info.changeScoreBy(1)
+    sprites.destroy(otherSprite, effects.trail, 100)
+    music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.InBackground)
+})
 function załadujPoziom (poziom: number) {
     game.splash("Poziom", poziom)
+    sprites.destroyAllSpritesOfKind(SpriteKind.Food)
     randomLevel = myCategory.randomTileMap(3, 3)
     scene.setBackgroundColor(15)
     tiles.setCurrentTilemap(randomLevel)
     pozycjaStartowaMariana = tiles.getTilesByType(assets.tile`entrance0`)[0]
     tiles.placeOnTile(marian, pozycjaStartowaMariana)
-    tilesExtra.runTileAnimation(
-    assets.tile`myTile7`,
-    assets.animation`aniGrass0`,
-    400,
-    TileAnimationOrder.Random
-    )
-    tilesExtra.runTileAnimation(
-    assets.tile`myTile4`,
-    assets.animation`lava`,
-    100,
-    TileAnimationOrder.LoopAsync
-    )
-    tilesExtra.runTileAnimation(
-    assets.tile`flowers`,
-    assets.animation`flowersAni`,
-    150,
-    TileAnimationOrder.LoopAsync
-    )
+    for (let value of tiles.getTilesByType(assets.tile`coin0`)) {
+        coinSprite = sprites.create(assets.image`Marian0`, SpriteKind.Food)
+        animation.runImageAnimation(
+        coinSprite,
+        [img`
+            . . . 4 4 . . . 
+            . . 4 5 5 4 . . 
+            . . 4 4 5 4 . . 
+            . . 4 4 5 4 . . 
+            . . 4 4 5 4 . . 
+            . . 4 4 5 4 . . 
+            . . 4 5 5 4 . . 
+            . . . 4 4 . . . 
+            `,img`
+            . . . 4 4 . . . 
+            . . 4 5 5 4 . . 
+            . 4 5 4 5 5 4 . 
+            . 4 5 4 5 5 4 . 
+            . 4 5 4 5 5 4 . 
+            . 4 5 4 5 5 4 . 
+            . . 4 5 5 4 . . 
+            . . . 4 4 . . . 
+            `,img`
+            . . 4 4 4 . . . 
+            . 4 5 5 5 4 . . 
+            4 5 5 4 5 5 4 . 
+            4 5 4 4 4 5 4 . 
+            4 5 4 4 4 5 4 . 
+            4 5 5 4 5 5 4 . 
+            . 4 5 5 5 4 . . 
+            . . 4 4 4 . . . 
+            `,img`
+            . . 4 4 4 4 . . 
+            . 4 5 5 5 5 4 . 
+            4 5 5 4 4 5 5 4 
+            4 5 4 4 4 4 5 4 
+            4 5 4 4 4 4 5 4 
+            4 5 5 4 4 5 5 4 
+            . 4 5 5 5 5 4 . 
+            . . 4 4 4 4 . . 
+            `,img`
+            . . . 4 4 4 . . 
+            . . 4 5 5 5 4 . 
+            . 4 5 5 4 5 5 4 
+            . 4 5 4 4 4 5 4 
+            . 4 5 4 4 4 5 4 
+            . 4 5 5 4 5 5 4 
+            . . 4 5 5 5 4 . 
+            . . . 4 4 4 . . 
+            `,img`
+            . . . 4 4 . . . 
+            . . 4 5 5 4 . . 
+            . 4 5 5 4 5 4 . 
+            . 4 5 5 4 5 4 . 
+            . 4 5 5 4 5 4 . 
+            . 4 5 5 4 5 4 . 
+            . . 4 5 5 4 . . 
+            . . . 4 4 . . . 
+            `,img`
+            . . . 4 4 . . . 
+            . . 4 5 5 4 . . 
+            . . 4 5 4 4 . . 
+            . . 4 5 4 4 . . 
+            . . 4 5 4 4 . . 
+            . . 4 5 4 4 . . 
+            . . 4 5 5 4 . . 
+            . . . 4 4 . . . 
+            `],
+        50,
+        true
+        )
+        tiles.placeOnTile(coinSprite, value)
+        tiles.setTileAt(value, assets.tile`myTile1`)
+    }
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`exit0`, function (sprite, location) {
     poziom = poziom + 1
     załadujPoziom(poziom)
 })
 let hittingSpikes = 0
+let coinSprite: Sprite = null
 let pozycjaStartowaMariana: tiles.Location = null
 let randomLevel: tiles.TileMapData = null
+let coinAnimation: animation.Animation = null
 let marianIdzieWLewo: animation.Animation = null
 let mySprite = 0
 let poziom = 0
@@ -91,6 +205,7 @@ marianek = img`
     `
 poziom = 1
 stwórzMariana()
+stwórzAnimacje()
 załadujPoziom(poziom)
 game.setGameOverEffect(true, effects.confetti)
 game.setGameOverMessage(true, "Brawo!")
