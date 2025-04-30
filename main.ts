@@ -99,6 +99,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSpr
 function załadujPoziom (poziom: number) {
     game.splash("Poziom", poziom)
     sprites.destroyAllSpritesOfKind(SpriteKind.Food)
+    sprites.destroyAllSpritesOfKind(SpriteKind.Enemy)
     randomLevel = myCategory.randomTileMap(3, 3)
     scene.setBackgroundColor(15)
     tiles.setCurrentTilemap(randomLevel)
@@ -178,18 +179,77 @@ function załadujPoziom (poziom: number) {
         tiles.placeOnTile(coinSprite, value)
         tiles.setTileAt(value, assets.tile`myTile1`)
     }
+    for (let value of tiles.getTilesByType(assets.tile`snake0`)) {
+        snakeSprite = sprites.create(assets.image`Marian0`, SpriteKind.Enemy)
+        animation.runImageAnimation(
+        snakeSprite,
+        [img`
+            . . 4 5 5 . . . 
+            . . 5 . 4 5 5 . 
+            . 5 . . 4 5 5 . 
+            . 4 5 . . . . . 
+            . . 4 5 5 5 5 . 
+            . . . . . . 4 5 
+            . . . . . . 4 5 
+            . . 5 5 5 5 5 . 
+            `,img`
+            . . 4 5 5 . . . 
+            . . 5 . 4 5 5 . 
+            . 5 . . 4 5 5 . 
+            . 4 5 . . . . . 
+            . . 4 5 5 5 5 . 
+            . . . . . . 4 5 
+            . . . . . . 4 5 
+            . . 5 5 5 5 5 . 
+            `,img`
+            . . 4 5 5 . . . 
+            . . 5 . 4 5 5 . 
+            . 5 . . 4 5 5 . 
+            . 4 5 . . . . . 
+            . . 4 5 5 5 . . 
+            . . . . . 4 5 . 
+            . . . . . 4 5 . 
+            . 5 5 5 5 5 . . 
+            `,img`
+            . . 4 5 5 5 . . 
+            . . 5 . . 4 5 5 
+            . 4 5 . . 4 5 5 
+            . 4 5 . . . . . 
+            . . 4 5 5 . . . 
+            . . . . 4 5 . . 
+            . . . . 4 5 . . 
+            5 5 5 5 5 . . . 
+            `],
+        111,
+        true
+        )
+        tiles.placeOnTile(snakeSprite, value)
+        tiles.setTileAt(value, assets.tile`myTile1`)
+    }
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`exit0`, function (sprite, location) {
     poziom = poziom + 1
     załadujPoziom(poziom)
 })
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
+    if (sprite.vy > 0 && !(sprite.isHittingTile(CollisionDirection.Bottom)) || sprite.y < otherSprite.top) {
+        otherSprite.destroy(effects.ashes, 250)
+        music.powerUp.play()
+    } else {
+        info.changeLifeBy(-1)
+        music.powerDown.play()
+    }
+    pause(invincibilityPeriod)
+})
 let hittingSpikes = 0
+let snakeSprite: Sprite = null
 let coinSprite: Sprite = null
 let pozycjaStartowaMariana: tiles.Location = null
 let randomLevel: tiles.TileMapData = null
 let coinAnimation: animation.Animation = null
 let marianIdzieWLewo: animation.Animation = null
 let mySprite = 0
+let invincibilityPeriod = 0
 let poziom = 0
 let marianek: Image = null
 let marian: Sprite = null
@@ -204,6 +264,7 @@ marianek = img`
     . . 2 . . 2 . . 
     `
 poziom = 1
+invincibilityPeriod = 1000
 stwórzMariana()
 stwórzAnimacje()
 załadujPoziom(poziom)

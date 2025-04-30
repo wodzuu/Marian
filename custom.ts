@@ -54,7 +54,7 @@ const arcadeTiles = [
     myTiles.coin,
     myTiles.ladder,
     myTiles.spikes,
-    myTiles.transparency16, // snake
+    myTiles.snake, // snake
     myTiles.transparency16, // brick
     myTiles.groundA1,
     myTiles.groundA2,
@@ -170,6 +170,9 @@ namespace myCategory {
                         break;
                     case Levelgen.Tiles.BRICK:
                         tile = random([GameTiles.WALL_1, GameTiles.WALL_2, GameTiles.WALL_3]);
+                        break;
+                    case Levelgen.Tiles.SNAKE:
+                        tile = GameTiles.SNAKE;
                         break;
                     default:
                         tile = GameTiles.NOTHING
