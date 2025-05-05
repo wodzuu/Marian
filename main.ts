@@ -273,6 +273,20 @@ game.setGameOverEffect(true, effects.confetti)
 game.setGameOverMessage(true, "Brawo!")
 info.setLife(3)
 info.setScore(0)
+// bumper movement
+game.onUpdate(function () {
+    for (let value9 of sprites.allOfKind(SpriteKind.Enemy)) {
+        if (myCategory.isAtTheEdge(value9)) {
+            if (value9.vx > 0) {
+                value9.vx = Math.randomRange(-30, -30)
+                value9.x += -5
+            } else {
+                value9.vx = Math.randomRange(30, 30)
+                value9.x += 5
+            }
+        }
+    }
+})
 game.onUpdate(function () {
     if (marian.vx < 0) {
         animation.setAction(marian, ActionKind.Walking)
@@ -297,18 +311,6 @@ game.onUpdate(function () {
             info.changeLifeBy(-1)
             hittingSpikes = 1
             marian.vy = -80
-        }
-    }
-})
-// bumper movement
-game.onUpdate(function () {
-    for (let value9 of sprites.allOfKind(SpriteKind.Enemy)) {
-        if (myCategory.isAtTheEdge(value9)) {
-            if (value9.vx > 0) {
-                value9.vx = Math.randomRange(-30, -30)
-            } else {
-                value9.vx = Math.randomRange(30, 30)
-            }
         }
     }
 })
