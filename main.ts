@@ -5,6 +5,16 @@ enum ActionKind {
     WalkingLeft,
     WalkingRight
 }
+namespace SpriteKind {
+    export const Trap = SpriteKind.create()
+}
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Trap, function (sprite, otherSprite) {
+    if (sprite.vy > 0 && !(sprite.isHittingTile(CollisionDirection.Bottom)) || sprite.y < otherSprite.top) {
+        info.changeLifeBy(-1)
+        music.powerDown.play()
+    }
+    pause(invincibilityPeriod)
+})
 function stwórzMariana () {
     marian = sprites.create(marianek, SpriteKind.Player)
     mySprite = 0
@@ -101,7 +111,7 @@ function załadujPoziom (poziom: number) {
     game.splash("Poziom", poziom)
     sprites.destroyAllSpritesOfKind(SpriteKind.Food)
     sprites.destroyAllSpritesOfKind(SpriteKind.Enemy)
-    randomLevel = myCategory.randomTileMap(3, 3)
+    randomLevel = myCategory.randomTileMap(2, 2)
     scene.setBackgroundColor(15)
     tiles.setCurrentTilemap(randomLevel)
     pozycjaStartowaMariana = tiles.getTilesByType(assets.tile`entrance0`)[0]
@@ -228,6 +238,11 @@ function załadujPoziom (poziom: number) {
         tiles.setTileAt(value2, assets.tile`myTile1`)
         snakeSprite.vx = snakeSpeed
     }
+    for (let value of tiles.getTilesByType(assets.tile`spikes0`)) {
+        spikesSprite = sprites.create(assets.image`Marian0`, SpriteKind.Trap)
+        tiles.placeOnTile(spikesSprite, value)
+        tiles.setTileAt(value, assets.tile`myTile1`)
+    }
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`exit0`, function (sprite, location) {
     poziom = poziom + 1
@@ -244,6 +259,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
     pause(invincibilityPeriod)
 })
 let hittingSpikes = 0
+let spikesSprite: Sprite = null
 let snakeSprite: Sprite = null
 let coinSprite: Sprite = null
 let pozycjaStartowaMariana: tiles.Location = null
@@ -303,13 +319,6 @@ game.onUpdate(function () {
         tiles.setTileAt(marian.tilemapLocation().getNeighboringLocation(CollisionDirection.Bottom), assets.tile`myTile2`)
         scene.cameraShake(2, 500)
         music.play(music.melodyPlayable(music.thump), music.PlaybackMode.InBackground)
-    }
-    if (marian.tileKindAt(TileDirection.Bottom, assets.tile`spikes0`)) {
-        if (hittingSpikes == 0 && marian.vy > 0) {
-            info.changeLifeBy(-1)
-            hittingSpikes = 1
-            marian.vy = -80
-        }
     }
 })
 game.onUpdateInterval(1000, function () {
