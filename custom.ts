@@ -164,9 +164,8 @@ namespace myCategory {
         const [levelMap, path] = new Levelgen.LevelGenerator(width, height).generate();
 
         const level = new Levelgen.LevelAssembler().assemble(roomCollection, levelMap, path);
-        //level.prettyPrint();
-        //console.log(path);
-        //printRawLevel(level.getWalled(), width);
+        level.prettyPrint();
+        console.log(path);
         const walledLevel = level.getWalled();
         const map = walledLevel.getRaw()
         const height_ = walledLevel.height
