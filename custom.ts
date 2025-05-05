@@ -86,17 +86,41 @@ namespace myCategory {
         console.log(num);
     }
 
+    //% block="is the %sprite at left edge or in front of a left wall"
+    export function isAtTheLeftEdge(sprite: Sprite): boolean {
+        let spriteLeft = sprite.x - 1;
+        let spriteBottom = sprite.y - (sprite.height / 2)
+
+        let colLeft = Math.round(spriteLeft / 8) - 1
+        let rowBelow = Math.round(spriteBottom / 8) + 1
+        let row = Math.round(spriteBottom / 8)
+
+        return !tiles.tileAtLocationIsWall(tiles.getTileLocation(colLeft, rowBelow)) || tiles.tileAtLocationIsWall(tiles.getTileLocation(colLeft, row))
+    }
+
+    //% block="is the %sprite at right edge or in front of a right wall"
+    export function isAtTheRightEdge(sprite: Sprite): boolean {
+        let spriteLeft = sprite.x - sprite.width
+        let spriteBottom = sprite.y - (sprite.height / 2)
+
+        let colRight = Math.round(spriteLeft / 8) + 1
+        let rowBelow = Math.round(spriteBottom / 8) + 1
+        let row = Math.round(spriteBottom / 8)
+
+        return !tiles.tileAtLocationIsWall(tiles.getTileLocation(colRight, rowBelow)) || tiles.tileAtLocationIsWall(tiles.getTileLocation(colRight, row))
+    }
+
     //% block="is the %sprite at tile edge or in front of a wall"
     export function isAtTheEdge(sprite: Sprite): boolean {
         let spriteLeft = sprite.x - (sprite.width / 2)
-        let spriteRight = sprite.x + (sprite.width / 2)
+        // let spriteRight = sprite.x + (sprite.width / 2)
         let spriteBottom = sprite.y + (sprite.height / 2)
-        
-        let colLeft = Math.floor((spriteLeft-1) / 8)
-        let colRight = Math.floor((spriteRight+1) / 8)
-        let rowBelow = Math.floor((spriteBottom+1) / 8)
-        let row = Math.floor((sprite.y) / 8)
 
+        let colLeft = Math.round(spriteLeft / 8) - 1
+        let colRight = Math.round(spriteLeft / 8) + 1
+        let rowBelow = Math.round(spriteBottom / 8) + 1
+        let row = Math.round(spriteBottom / 8)
+ 
         return !tiles.tileAtLocationIsWall(tiles.getTileLocation(colLeft, rowBelow)) || !tiles.tileAtLocationIsWall(tiles.getTileLocation(colRight, rowBelow))
              || tiles.tileAtLocationIsWall(tiles.getTileLocation(colLeft, row)) || tiles.tileAtLocationIsWall(tiles.getTileLocation(colRight, row))
     }
@@ -154,6 +178,7 @@ namespace myCategory {
         //const room = rooms.slice()
         const i = image.create(width_, height_)
         i.fill(0)
+        let snakeon=false;
         for (let y = 0; y < height_; y++) {
             for (let x = 0; x < width_; x++) {
                 const index = y * width_ + x;
@@ -187,7 +212,12 @@ namespace myCategory {
                         tile = random([GameTiles.WALL_1, GameTiles.WALL_2, GameTiles.WALL_3]);
                         break;
                     case Levelgen.Tiles.SNAKE:
-                        tile = GameTiles.SNAKE;
+                        if(!snakeon){
+                            tile = GameTiles.SNAKE;
+                            //snakeon=true
+                        } else {
+                            tile = GameTiles.NOTHING;
+                        }
                         break;
                     default:
                         tile = GameTiles.NOTHING

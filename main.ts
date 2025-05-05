@@ -97,6 +97,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSpr
     music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.InBackground)
 })
 function załadujPoziom (poziom: number) {
+    snakeSpeed = 10
     game.splash("Poziom", poziom)
     sprites.destroyAllSpritesOfKind(SpriteKind.Food)
     sprites.destroyAllSpritesOfKind(SpriteKind.Enemy)
@@ -179,7 +180,7 @@ function załadujPoziom (poziom: number) {
         tiles.placeOnTile(coinSprite, value)
         tiles.setTileAt(value, assets.tile`myTile1`)
     }
-    for (let value of tiles.getTilesByType(assets.tile`snake0`)) {
+    for (let value2 of tiles.getTilesByType(assets.tile`snake0`)) {
         snakeSprite = sprites.create(assets.image`Marian0`, SpriteKind.Enemy)
         animation.runImageAnimation(
         snakeSprite,
@@ -223,9 +224,9 @@ function załadujPoziom (poziom: number) {
         111,
         true
         )
-        tiles.placeOnTile(snakeSprite, value)
-        tiles.setTileAt(value, assets.tile`myTile1`)
-        snakeSprite.vx = Math.randomRange(-30, -30)
+        tiles.placeOnTile(snakeSprite, value2)
+        tiles.setTileAt(value2, assets.tile`myTile1`)
+        snakeSprite.vx = snakeSpeed
     }
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`exit0`, function (sprite, location) {
@@ -247,6 +248,7 @@ let snakeSprite: Sprite = null
 let coinSprite: Sprite = null
 let pozycjaStartowaMariana: tiles.Location = null
 let randomLevel: tiles.TileMapData = null
+let snakeSpeed = 0
 let coinAnimation: animation.Animation = null
 let marianIdzieWLewo: animation.Animation = null
 let mySprite = 0
@@ -276,14 +278,10 @@ info.setScore(0)
 // bumper movement
 game.onUpdate(function () {
     for (let value9 of sprites.allOfKind(SpriteKind.Enemy)) {
-        if (myCategory.isAtTheEdge(value9)) {
-            if (value9.vx > 0) {
-                value9.vx = Math.randomRange(-30, -30)
-                value9.x += -5
-            } else {
-                value9.vx = Math.randomRange(30, 30)
-                value9.x += 5
-            }
+        if (myCategory.isAtTheRightEdge(value9)) {
+            value9.vx = 0 - snakeSpeed
+        } else if (myCategory.isAtTheLeftEdge(value9)) {
+            value9.vx = snakeSpeed
         }
     }
 })
@@ -315,7 +313,7 @@ game.onUpdate(function () {
     }
 })
 game.onUpdateInterval(1000, function () {
-    for (let value of tiles.getTilesByType(assets.tile`myTile3`)) {
+    for (let value3 of tiles.getTilesByType(assets.tile`myTile3`)) {
     	
     }
     for (let randomLevel2 of tiles.getTilesByType(assets.tile`myTile2`)) {
