@@ -5,7 +5,8 @@
         "device": "*",
         "animation": "*",
         "arcade-background-scroll": "github:microsoft/arcade-background-scroll#v0.1.2",
-        "microphone": "*"
+        "microphone": "*",
+        "arcade-text": "github:microsoft/arcade-text#v1.3.0"
     },
     "files": [
         "main.blocks",
@@ -30,7 +31,7 @@
     "supportedTargets": [
         "arcade"
     ],
-    "preferredEditor": "tsprj",
+    "preferredEditor": "blocksprj",
     "palette": [
         "#000000",
         "#FFFFFF",

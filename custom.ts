@@ -170,16 +170,16 @@ namespace myCategory {
         level.set(4, Levelgen.ROOM_HEIGHT - 3, Levelgen.Tiles.SHOP_BOMB)
         level.set(6, Levelgen.ROOM_HEIGHT - 3, Levelgen.Tiles.SHOP_ROPE)
         level.set(8, Levelgen.ROOM_HEIGHT - 3, Levelgen.Tiles.SHOP_GUN)
-        return toTilemap(level, 0, 0, 0);
+        return toTilemap(level.getWalled().getWalled().getWalled().getWalled(), 0, 0, 0);
     }
 
     //% block="random level with %difficulty"
     export function randomLevel(difficulty: number = 1) {
         let width = difficulty <= 3 ? 2 : 3
         let height = difficulty <= 2 ? 2 : 3
-        let snakeChance = Math.min(1.0, difficulty / 20);
-        let spikeChance = Math.min(1.0, difficulty / 5);
-        let coinChance = Math.min(0.5, difficulty / 20);
+        let snakeChance = Math.min(1.0, difficulty / 20 + 0.1);
+        let spikeChance = Math.min(1.0, difficulty / 5 + 0.1);
+        let coinChance = Math.min(0.5, difficulty / 20 + 0.3);
 
         const roomCollection = new Levelgen.RoomCollection();
         roomSets.forEach(roomSet => roomCollection.addRooms(roomSet));

@@ -23,13 +23,18 @@ function stwórzMariana () {
     marian.ay = 150
 }
 function załadujSklep (poziom: number) {
+    clearLevel()
+    tiles.setCurrentTilemap(myCategory.shop(poziom))
+    setUpLevelObjects(poziom)
+}
+function wDół () {
+    if (myCategory.isOnTop(marian, assets.tile`ladder0`)) {
+        marian.y += 1
+        marian.x = marian.tilemapLocation().x
+    }
+}
+function setUpLevelObjects (poziom: number) {
     snakeSpeed = Math.min(poziom * 5, 30)
-    sprites.destroyAllSpritesOfKind(SpriteKind.Food)
-    sprites.destroyAllSpritesOfKind(SpriteKind.Enemy)
-    sprites.destroyAllSpritesOfKind(SpriteKind.Trap)
-    randomLevel = myCategory.shop(0)
-    scene.setBackgroundColor(15)
-    tiles.setCurrentTilemap(randomLevel)
     pozycjaStartowaMariana = tiles.getTilesByType(assets.tile`entrance0`)[0]
     tiles.placeOnTile(marian, pozycjaStartowaMariana)
     for (let value3 of tiles.getTilesByType(assets.tile`spikes0`)) {
@@ -168,11 +173,25 @@ function załadujSklep (poziom: number) {
         tiles.setTileAt(value2, assets.tile`myTile1`)
         snakeSprite.vx = snakeSpeed
     }
-}
-function wDół () {
-    if (myCategory.isOnTop(marian, assets.tile`ladder0`)) {
-        marian.y += 1
-        marian.x = marian.tilemapLocation().x
+    for (let value2 of tiles.getTilesByType(assets.tile`life`)) {
+        life_cost = textsprite.create(convertToText(life_cost_value), 0, 1)
+        tiles.placeOnTile(life_cost, value2)
+        life_cost.y += -8
+    }
+    for (let value2 of tiles.getTilesByType(assets.tile`gun`)) {
+        life_cost = textsprite.create(convertToText(gun_cost_value), 0, 1)
+        tiles.placeOnTile(life_cost, value2)
+        life_cost.y += -8
+    }
+    for (let value2 of tiles.getTilesByType(assets.tile`bomb`)) {
+        life_cost = textsprite.create(convertToText(bomb_cost_value), 0, 1)
+        tiles.placeOnTile(life_cost, value2)
+        life_cost.y += -8
+    }
+    for (let value2 of tiles.getTilesByType(assets.tile`rope`)) {
+        life_cost = textsprite.create(convertToText(rope_cost_value), 0, 1)
+        tiles.placeOnTile(life_cost, value2)
+        life_cost.y += -8
     }
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`shop0`, function (sprite, location) {
@@ -256,158 +275,30 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSpr
     sprites.destroy(otherSprite, effects.trail, 100)
     music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.InBackground)
 })
-function załadujPoziom (poziom: number) {
-    info.changeLifeBy(1)
-    game.splash("Poziom", poziom)
-    snakeSpeed = Math.min(poziom * 5, 30)
+function clearLevel () {
     sprites.destroyAllSpritesOfKind(SpriteKind.Food)
     sprites.destroyAllSpritesOfKind(SpriteKind.Enemy)
+    sprites.destroyAllSpritesOfKind(SpriteKind.Text)
     sprites.destroyAllSpritesOfKind(SpriteKind.Trap)
-    randomLevel = myCategory.randomLevel(poziom)
     scene.setBackgroundColor(15)
-    tiles.setCurrentTilemap(randomLevel)
-    pozycjaStartowaMariana = tiles.getTilesByType(assets.tile`entrance0`)[0]
-    tiles.placeOnTile(marian, pozycjaStartowaMariana)
-    for (let value3 of tiles.getTilesByType(assets.tile`spikes0`)) {
-        spikesSprite = sprites.create(img`
-            . . . . . . . . 
-            . . . . . . . . 
-            . . . 7 . . . . 
-            . 7 . 7 . . . 7 
-            . 7 . 7 . 7 . 7 
-            . 7 . 7 7 7 . 7 
-            7 7 7 7 7 7 . 7 
-            7 7 7 7 7 7 7 7 
-            `, SpriteKind.Trap)
-        tiles.placeOnTile(spikesSprite, value3)
-        tiles.setTileAt(value3, assets.tile`myTile1`)
-    }
-    for (let value of tiles.getTilesByType(assets.tile`coin0`)) {
-        coinSprite = sprites.create(assets.image`Marian0`, SpriteKind.Food)
-        animation.runImageAnimation(
-        coinSprite,
-        [img`
-            . . . 4 4 . . . 
-            . . 4 5 5 4 . . 
-            . . 4 4 5 4 . . 
-            . . 4 4 5 4 . . 
-            . . 4 4 5 4 . . 
-            . . 4 4 5 4 . . 
-            . . 4 5 5 4 . . 
-            . . . 4 4 . . . 
-            `,img`
-            . . . 4 4 . . . 
-            . . 4 5 5 4 . . 
-            . 4 5 4 5 5 4 . 
-            . 4 5 4 5 5 4 . 
-            . 4 5 4 5 5 4 . 
-            . 4 5 4 5 5 4 . 
-            . . 4 5 5 4 . . 
-            . . . 4 4 . . . 
-            `,img`
-            . . 4 4 4 . . . 
-            . 4 5 5 5 4 . . 
-            4 5 5 4 5 5 4 . 
-            4 5 4 4 4 5 4 . 
-            4 5 4 4 4 5 4 . 
-            4 5 5 4 5 5 4 . 
-            . 4 5 5 5 4 . . 
-            . . 4 4 4 . . . 
-            `,img`
-            . . 4 4 4 4 . . 
-            . 4 5 5 5 5 4 . 
-            4 5 5 4 4 5 5 4 
-            4 5 4 4 4 4 5 4 
-            4 5 4 4 4 4 5 4 
-            4 5 5 4 4 5 5 4 
-            . 4 5 5 5 5 4 . 
-            . . 4 4 4 4 . . 
-            `,img`
-            . . . 4 4 4 . . 
-            . . 4 5 5 5 4 . 
-            . 4 5 5 4 5 5 4 
-            . 4 5 4 4 4 5 4 
-            . 4 5 4 4 4 5 4 
-            . 4 5 5 4 5 5 4 
-            . . 4 5 5 5 4 . 
-            . . . 4 4 4 . . 
-            `,img`
-            . . . 4 4 . . . 
-            . . 4 5 5 4 . . 
-            . 4 5 5 4 5 4 . 
-            . 4 5 5 4 5 4 . 
-            . 4 5 5 4 5 4 . 
-            . 4 5 5 4 5 4 . 
-            . . 4 5 5 4 . . 
-            . . . 4 4 . . . 
-            `,img`
-            . . . 4 4 . . . 
-            . . 4 5 5 4 . . 
-            . . 4 5 4 4 . . 
-            . . 4 5 4 4 . . 
-            . . 4 5 4 4 . . 
-            . . 4 5 4 4 . . 
-            . . 4 5 5 4 . . 
-            . . . 4 4 . . . 
-            `],
-        50,
-        true
-        )
-        tiles.placeOnTile(coinSprite, value)
-        tiles.setTileAt(value, assets.tile`myTile1`)
-    }
-    for (let value2 of tiles.getTilesByType(assets.tile`snake0`)) {
-        snakeSprite = sprites.create(assets.image`Marian0`, SpriteKind.Enemy)
-        animation.runImageAnimation(
-        snakeSprite,
-        [img`
-            . . 4 5 5 . . . 
-            . . 5 . 4 5 5 . 
-            . 5 . . 4 5 5 . 
-            . 4 5 . . . . . 
-            . . 4 5 5 5 5 . 
-            . . . . . . 4 5 
-            . . . . . . 4 5 
-            . . 5 5 5 5 5 . 
-            `,img`
-            . . 4 5 5 . . . 
-            . . 5 . 4 5 5 . 
-            . 5 . . 4 5 5 . 
-            . 4 5 . . . . . 
-            . . 4 5 5 5 5 . 
-            . . . . . . 4 5 
-            . . . . . . 4 5 
-            . . 5 5 5 5 5 . 
-            `,img`
-            . . 4 5 5 . . . 
-            . . 5 . 4 5 5 . 
-            . 5 . . 4 5 5 . 
-            . 4 5 . . . . . 
-            . . 4 5 5 5 . . 
-            . . . . . 4 5 . 
-            . . . . . 4 5 . 
-            . 5 5 5 5 5 . . 
-            `,img`
-            . . 4 5 5 5 . . 
-            . . 5 . . 4 5 5 
-            . 4 5 . . 4 5 5 
-            . 4 5 . . . . . 
-            . . 4 5 5 . . . 
-            . . . . 4 5 . . 
-            . . . . 4 5 . . 
-            5 5 5 5 5 . . . 
-            `],
-        111,
-        true
-        )
-        tiles.placeOnTile(snakeSprite, value2)
-        tiles.setTileAt(value2, assets.tile`myTile1`)
-        snakeSprite.vx = snakeSpeed
-    }
+}
+function załadujPoziom (poziom: number) {
+    clearLevel()
+    info.changeLifeBy(1)
+    game.splash("Poziom", poziom)
+    tiles.setCurrentTilemap(myCategory.randomLevel(poziom))
+    setUpLevelObjects(poziom)
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`exit0`, function (sprite, location) {
     poziom = poziom + 1
     załadujPoziom(poziom)
+})
+scene.onOverlapTile(SpriteKind.Player, assets.tile`life`, function (sprite, location) {
+    if (info.score() >= life_cost_value) {
+        info.changeScoreBy(0 - life_cost_value)
+        info.changeLifeBy(1)
+        music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.InBackground)
+    }
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
     if (sprite.vy > 0 && !(sprite.isHittingTile(CollisionDirection.Bottom)) || sprite.y < otherSprite.top) {
@@ -422,13 +313,17 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
 let hittingSpikes = 0
 let coinAnimation: animation.Animation = null
 let marianIdzieWLewo: animation.Animation = null
+let life_cost: TextSprite = null
 let snakeSprite: Sprite = null
 let coinSprite: Sprite = null
 let spikesSprite: Sprite = null
 let pozycjaStartowaMariana: tiles.Location = null
-let randomLevel: tiles.TileMapData = null
 let snakeSpeed = 0
 let mySprite = 0
+let rope_cost_value = 0
+let bomb_cost_value = 0
+let gun_cost_value = 0
+let life_cost_value = 0
 let invincibilityPeriod = 0
 let poziom = 0
 let marianek: Image = null
@@ -445,6 +340,10 @@ marianek = img`
     `
 poziom = 1
 invincibilityPeriod = 1000
+life_cost_value = 5
+gun_cost_value = 15
+bomb_cost_value = 10
+rope_cost_value = 5
 stwórzMariana()
 stwórzAnimacje()
 załadujPoziom(poziom)
