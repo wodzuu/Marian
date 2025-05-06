@@ -284,7 +284,6 @@ function clearLevel () {
 }
 function załadujPoziom (poziom: number) {
     clearLevel()
-    info.changeLifeBy(1)
     game.splash("Poziom", poziom)
     tiles.setCurrentTilemap(myCategory.randomLevel(poziom))
     setUpLevelObjects(poziom)
