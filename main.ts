@@ -239,10 +239,10 @@ function załadujPoziom (poziom: number) {
         tiles.setTileAt(value2, assets.tile`myTile1`)
         snakeSprite.vx = snakeSpeed
     }
-    for (let value of tiles.getTilesByType(assets.tile`spikes0`)) {
+    for (let value3 of tiles.getTilesByType(assets.tile`spikes0`)) {
         spikesSprite = sprites.create(assets.image`Marian0`, SpriteKind.Trap)
-        tiles.placeOnTile(spikesSprite, value)
-        tiles.setTileAt(value, assets.tile`myTile1`)
+        tiles.placeOnTile(spikesSprite, value3)
+        tiles.setTileAt(value3, assets.tile`myTile1`)
     }
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`exit0`, function (sprite, location) {
@@ -323,7 +323,7 @@ game.onUpdate(function () {
     }
 })
 game.onUpdateInterval(1000, function () {
-    for (let value3 of tiles.getTilesByType(assets.tile`myTile3`)) {
+    for (let value32 of tiles.getTilesByType(assets.tile`myTile3`)) {
     	
     }
     for (let randomLevel2 of tiles.getTilesByType(assets.tile`myTile2`)) {
