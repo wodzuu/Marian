@@ -112,11 +112,26 @@ function załadujPoziom (poziom: number) {
     game.splash("Poziom", poziom)
     sprites.destroyAllSpritesOfKind(SpriteKind.Food)
     sprites.destroyAllSpritesOfKind(SpriteKind.Enemy)
+    sprites.destroyAllSpritesOfKind(SpriteKind.Trap)
     randomLevel = myCategory.randomLevel(poziom)
     scene.setBackgroundColor(15)
     tiles.setCurrentTilemap(randomLevel)
     pozycjaStartowaMariana = tiles.getTilesByType(assets.tile`entrance0`)[0]
     tiles.placeOnTile(marian, pozycjaStartowaMariana)
+    for (let value3 of tiles.getTilesByType(assets.tile`spikes0`)) {
+        spikesSprite = sprites.create(img`
+            . . . . . . . . 
+            . . . . . . . . 
+            . . . 7 . . . . 
+            . 7 . 7 . . . 7 
+            . 7 . 7 . 7 . 7 
+            . 7 . 7 7 7 . 7 
+            7 7 7 7 7 7 . 7 
+            7 7 7 7 7 7 7 7 
+            `, SpriteKind.Trap)
+        tiles.placeOnTile(spikesSprite, value3)
+        tiles.setTileAt(value3, assets.tile`myTile1`)
+    }
     for (let value of tiles.getTilesByType(assets.tile`coin0`)) {
         coinSprite = sprites.create(assets.image`Marian0`, SpriteKind.Food)
         animation.runImageAnimation(
@@ -239,11 +254,6 @@ function załadujPoziom (poziom: number) {
         tiles.setTileAt(value2, assets.tile`myTile1`)
         snakeSprite.vx = snakeSpeed
     }
-    for (let value3 of tiles.getTilesByType(assets.tile`spikes0`)) {
-        spikesSprite = sprites.create(assets.image`Marian0`, SpriteKind.Trap)
-        tiles.placeOnTile(spikesSprite, value3)
-        tiles.setTileAt(value3, assets.tile`myTile1`)
-    }
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`exit0`, function (sprite, location) {
     poziom = poziom + 1
@@ -260,9 +270,9 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
     pause(invincibilityPeriod)
 })
 let hittingSpikes = 0
-let spikesSprite: Sprite = null
 let snakeSprite: Sprite = null
 let coinSprite: Sprite = null
+let spikesSprite: Sprite = null
 let pozycjaStartowaMariana: tiles.Location = null
 let randomLevel: tiles.TileMapData = null
 let snakeSpeed = 0

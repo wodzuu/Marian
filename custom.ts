@@ -153,33 +153,22 @@ namespace myCategory {
 
     //% block="random level with %difficulty"
     export function randomLevel(difficulty: number = 1) {
-        // var hexWidth = width.toString(16);
-        // var hexHeigth = height.toString(16);
-        // const width_ = 30
-        // const height_ = 24
         let width = difficulty <= 3 ? 2 : 3
         let height = difficulty <= 2 ? 2 : 3
         let snakeChance = Math.min(1.0, difficulty / 20);
-        let spikeChance = Math.min(1.0, difficulty / 10);
-        let coinChance = Math.min(0.5, difficulty / 5);
+        let spikeChance = Math.min(1.0, difficulty / 5);
+        let coinChance = Math.min(0.5, difficulty / 20);
 
-        console.log('here ' + width + ' ' + height)
         const roomCollection = new Levelgen.RoomCollection();
         roomSets.forEach(roomSet => roomCollection.addRooms(roomSet));
         const [levelMap, path] = new Levelgen.LevelGenerator(width, height).generate();
 
         const level = new Levelgen.LevelAssembler().assemble(roomCollection, levelMap, path);
-        level.prettyPrint();
-        console.log(path);
         const walledLevel = level.getWalled();
         const map = walledLevel.getRaw()
         const height_ = walledLevel.height
         const width_ = walledLevel.width
 
-        path.prettyPrint()
-        // printRawLevel(walledLevel.level, walledLevel.width);
-
-        //const room = rooms.slice()
         const i = image.create(width_, height_)
         i.fill(0)
         
