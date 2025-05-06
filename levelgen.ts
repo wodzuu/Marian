@@ -396,7 +396,7 @@ namespace Levelgen {
             return level;
         }
 
-        private pickShopRoom(height: number, width: number, path: Levelgen.Path) {
+        private pickShopRoom(height: number, width: number, path: Levelgen.Path): { x: number; y: number } {
             const notOnPathRooms = []
             for (let y = 0; y < height; y++) {
                 for (let x = 0; x < width; x++) {
