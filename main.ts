@@ -107,11 +107,12 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSpr
     music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.InBackground)
 })
 function załadujPoziom (poziom: number) {
-    snakeSpeed = 10
+    snakeSpeed = Math.min(poziom * 5, 30)
+    info.changeLifeBy(1)
     game.splash("Poziom", poziom)
     sprites.destroyAllSpritesOfKind(SpriteKind.Food)
     sprites.destroyAllSpritesOfKind(SpriteKind.Enemy)
-    randomLevel = myCategory.randomTileMap(2, 2)
+    randomLevel = myCategory.randomLevel(poziom)
     scene.setBackgroundColor(15)
     tiles.setCurrentTilemap(randomLevel)
     pozycjaStartowaMariana = tiles.getTilesByType(assets.tile`entrance0`)[0]
@@ -289,7 +290,7 @@ stwórzAnimacje()
 załadujPoziom(poziom)
 game.setGameOverEffect(true, effects.confetti)
 game.setGameOverMessage(true, "Brawo!")
-info.setLife(3)
+info.setLife(2)
 info.setScore(0)
 // bumper movement
 game.onUpdate(function () {

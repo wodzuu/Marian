@@ -232,4 +232,88 @@ namespace myCategory {
         const b = Buffer.fromArray([width_, 0, height_, 0].concat(map))
         return tiles.createTilemap(b, i, arcadeTiles, TileScale.Eight);
     }
+
+    //% block="random level with %difficulty"
+    export function randomLevel(difficulty: number = 1) {
+        // var hexWidth = width.toString(16);
+        // var hexHeigth = height.toString(16);
+        // const width_ = 30
+        // const height_ = 24
+        let width = difficulty <= 3 ? 2 : 3
+        let height = difficulty <= 2 ? 2 : 3
+        let snakeChance = Math.min(1.0, difficulty / 5);
+        let spikeChance = Math.min(1.0, difficulty / 10);
+
+        console.log('here ' + width + ' ' + height)
+        const roomCollection = new Levelgen.RoomCollection();
+        roomSets.forEach(roomSet => roomCollection.addRooms(roomSet));
+        const [levelMap, path] = new Levelgen.LevelGenerator(width, height).generate();
+
+        const level = new Levelgen.LevelAssembler().assemble(roomCollection, levelMap, path);
+        level.prettyPrint();
+        console.log(path);
+        const walledLevel = level.getWalled();
+        const map = walledLevel.getRaw()
+        const height_ = walledLevel.height
+        const width_ = walledLevel.width
+
+        path.prettyPrint()
+        // printRawLevel(walledLevel.level, walledLevel.width);
+
+        //const room = rooms.slice()
+        const i = image.create(width_, height_)
+        i.fill(0)
+        
+        for (let y = 0; y < height_; y++) {
+            for (let x = 0; x < width_; x++) {
+                const index = y * width_ + x;
+                let tile = map[index];
+                switch (tile) {
+                    case Levelgen.Tiles.COIN:
+                        if (Math.random() < 0.8) tile = GameTiles.NOTHING;
+                        else tile = GameTiles.COIN
+                        break;
+                    case Levelgen.Tiles.SPIKES:
+                        if(y < height_ - 1 && Levelgen.isWalkableTileType(walledLevel.get(x, y + 1))) {
+                            tile = Math.random() < spikeChance ? GameTiles.SPIKES : GameTiles.NOTHING
+                        } else {
+                            tile = GameTiles.NOTHING;
+                        }
+                        break;
+                    case Levelgen.Tiles.LADDER:
+                        tile = GameTiles.LADDER;
+                        break;
+                    case Levelgen.Tiles.WALL:
+                        if (y > 0 && !Levelgen.isWalkableTileType(walledLevel.get(x, y - 1))) {
+                            tile = random([GameTiles.GROUND_A1, GameTiles.GROUND_A2, GameTiles.GROUND_A3]);
+                        } else {
+                            tile = random([GameTiles.WALL_1, GameTiles.WALL_2, GameTiles.WALL_3]);
+                        }
+                        break;
+                    case Levelgen.Tiles.END:
+                        tile = GameTiles.END;
+                        break;
+                    case Levelgen.Tiles.START:
+                        tile = GameTiles.START;
+                        break;
+                    case Levelgen.Tiles.BRICK:
+                        tile = random([GameTiles.WALL_1, GameTiles.WALL_2, GameTiles.WALL_3]);
+                        break;
+                    case Levelgen.Tiles.SNAKE:
+                        tile = Math.random() < snakeChance ? GameTiles.SNAKE : GameTiles.NOTHING;
+                        break;
+                    default:
+                        tile = GameTiles.NOTHING
+                }
+                map[index] = tile
+                if (isWalkableTileType(tile)) {
+                    i.setPixel(x, y, 2)
+                }
+            }
+        }
+
+
+        const b = Buffer.fromArray([width_, 0, height_, 0].concat(map))
+        return tiles.createTilemap(b, i, arcadeTiles, TileScale.Eight);
+    }
 }
