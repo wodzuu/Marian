@@ -43,7 +43,8 @@ enum GameTiles {
     GROUND_A2 = 10,
     GROUND_A3 = 11,
     WALL_2 = 12,
-    WALL_3 = 13
+    WALL_3 = 13,
+    SHOP = 14
 }
 
 const arcadeTiles = [
@@ -60,7 +61,8 @@ const arcadeTiles = [
     myTiles.groundA2,
     myTiles.groundA3,
     myTiles.wall2,
-    myTiles.wall3
+    myTiles.wall3,
+    myTiles.shop
 ]
 
 
@@ -208,6 +210,9 @@ namespace myCategory {
                         break;
                     case Levelgen.Tiles.SNAKE:
                         tile = Math.random() < snakeChance ? GameTiles.SNAKE : GameTiles.NOTHING;
+                        break;
+                    case Levelgen.Tiles.SHOP:
+                        tile = GameTiles.SHOP
                         break;
                     default:
                         tile = GameTiles.NOTHING

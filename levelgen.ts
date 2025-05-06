@@ -83,6 +83,7 @@ namespace Levelgen {
         START,
         EXIT,
         OTHER,
+        SHOP
     }
 
     export enum Tiles {
@@ -94,7 +95,8 @@ namespace Levelgen {
         LADDER = 5,
         SPIKES = 6,
         SNAKE = 7,
-        BRICK = 8
+        BRICK = 8,
+        SHOP = 9
     }
 
     export const ROOM_WIDTH = 10;
@@ -144,6 +146,10 @@ namespace Levelgen {
 
         addStep(x: number, y: number): void {
             this.steps.push(new PathSection(x, y));
+        }
+
+        containsRoom(x: number, y: number): boolean {
+            return this.getRoomTypeAt(x, y) !== null;
         }
 
         setCurrentRoomType(roomType: RoomType): void {
@@ -364,11 +370,19 @@ namespace Levelgen {
             const width = levelMap.length;
             const level = new Level(width * ROOM_WIDTH, height * ROOM_HEIGHT);
 
+            const shopRoom = this.pickShopRoom(height, width, path);
+
             for (let y = 0; y < height; y++) {
                 for (let x = 0; x < width; x++) {
                     const roomType = levelMap[x][y];
                     const room = roomCollection.getRandomRoomOfType(roomType);
-                    if (!room) continue;
+                    if (!room) {
+                        console.log('Cound not fetch room of type: ' + roomType);
+                        continue;
+                    }
+                    if (x === shopRoom.x && y === shopRoom.y) {
+                        room.setRoomCategory(RoomCategory.SHOP);
+                    }
 
                     if (path.isStartRoom(x, y)) {
                         room.setRoomCategory(RoomCategory.START);
@@ -380,6 +394,22 @@ namespace Levelgen {
                 }
             }
             return level;
+        }
+
+        private pickShopRoom(height: number, width: number, path: Levelgen.Path) {
+            const notOnPathRooms = []
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    if (!path.containsRoom(x, y)) {
+                        notOnPathRooms.push({x, y})
+                    }
+                }
+            }
+            const shopRoom = notOnPathRooms.length > 0 ? notOnPathRooms[Math.floor(Math.random() * notOnPathRooms.length)] : {
+                x: -1,
+                y: -1
+            }
+            return shopRoom;
         }
     }
 
@@ -405,6 +435,9 @@ namespace Levelgen {
                 case RoomCategory.EXIT:
                     tile = Tiles.END;
                     break;
+                case RoomCategory.SHOP:
+                    tile = Tiles.SHOP;
+                    break;
                 default:
                     return;
             }
@@ -413,7 +446,7 @@ namespace Levelgen {
             this.tiles.forEach((block, index) => {
                 if (block === Tiles.COIN) {
                     // check if sits on floor
-                    if (this.tiles[index+ROOM_WIDTH+1] === Tiles.WALL || this.tiles[index+ROOM_WIDTH+1] === Tiles.BRICK) {
+                    if (this.tiles[index + ROOM_WIDTH + 1] === Tiles.WALL || this.tiles[index + ROOM_WIDTH + 1] === Tiles.BRICK) {
                         candidates.push(index);
                     }
                 }
@@ -547,28 +580,28 @@ namespace Levelgen {
 
 const roomSets: number[][] = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 4, 0, 0, 0, 1, 1,
-        1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0,
-        1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1,
-        1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 4, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 5, 1,
-        4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 6, 0, 7, 0, 0, 5, 1,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 6, 0, 1, 1, 0, 0, 0, 0, 0, 4, 1, 0, 0, 1, 1, 1, 0, 0, 0, 4,
+        0, 4, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0,
+        1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 5, 1,
+        1, 1, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 7, 0, 4, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 5, 1,
+        4, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 6, 0, 7, 0, 0, 5, 1,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 6, 0, 1, 1, 0, 0, 0, 0, 0, 4, 1, 1, 0, 1, 1, 1, 0, 0, 0, 4,
         1, 1, 4, 0, 0, 0, 7, 0, 0, 1, 1, 4, 0, 0, 0, 0, 0, 0, 6, 1, 1, 0, 0, 0, 0, 0, 0, 1, 4, 1,
         1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 4, 1, 1, 0, 0, 0, 0, 1, 1,
         1, 8, 0, 0, 4, 0, 0, 0, 0, 0, 1, 1, 0, 0, 4, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 6, 0, 5, 0,
         4, 0, 0, 1, 1, 1, 6, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 5, 0,
-        1, 1, 5, 0, 1, 1, 1, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1,
-        1, 1, 5, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 4,
+        1, 1, 5, 0, 1, 1, 1, 0, 4, 0, 0, 4, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1,
+        1, 1, 5, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 4,
         1, 1, 5, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 7, 0, 4, 0, 0, 0, 0, 0, 0, 0, 6, 1, 1, 1, 0, 0, 1,
         1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 6, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1,
-        1, 1, 4, 0, 0, 0, 7, 0, 6, 6, 1, 4, 0, 0, 0, 0, 4, 0, 6, 1, 1, 1, 4, 4, 0, 0, 0, 0, 1, 1,
+        0, 0, 4, 0, 0, 0, 7, 0, 6, 6, 1, 4, 0, 0, 0, 0, 4, 0, 6, 1, 1, 1, 4, 4, 0, 0, 0, 0, 1, 1,
         1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 0, 0, 0, 4, 0, 0, 1, 1, 0, 4, 0, 0, 5, 0, 0, 4, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0,
-        4, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 5, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0,
-        1, 0, 0, 5, 0, 7, 0, 0, 0, 0, 0, 0, 1, 1, 5, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4,
-        1, 1, 0, 5, 1, 1, 1, 0, 0, 0, 0, 0, 0, 4, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        1, 1, 0, 5, 1, 1, 0, 0, 0, 0, 0, 0, 5, 1, 1, 1, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0,
+        1, 1, 0, 0, 0, 4, 0, 1, 1, 1, 0, 4, 0, 0, 5, 0, 0, 4, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0,
+        4, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 5, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0,
+        1, 0, 0, 5, 0, 7, 0, 0, 0, 0, 0, 0, 1, 1, 5, 1, 0, 1, 0, 0, 0, 1, 1, 4, 7, 0, 0, 1, 0, 4,
+        1, 1, 0, 5, 1, 1, 1, 0, 0, 0, 0, 0, 0, 4, 5, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0,
+        0, 0, 0, 5, 1, 1, 0, 0, 0, 0, 0, 0, 5, 1, 1, 1, 0, 4, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 0, 0,
         1, 1, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0,
-        1, 1, 6, 5, 0, 4, 0, 0, 0, 1, 4, 0, 5, 0, 7, 0, 0, 0, 0, 1, 6, 0, 0, 7, 6, 6, 1, 1, 6, 0,
+        1, 1, 6, 5, 0, 4, 0, 0, 0, 1, 4, 0, 5, 0, 7, 0, 0, 0, 0, 1, 6, 0, 0, 7, 0, 6, 1, 1, 6, 0,
         1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ];
 

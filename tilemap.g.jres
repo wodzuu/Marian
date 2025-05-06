@@ -178,6 +178,12 @@
         "tilemapTile": true,
         "displayName": "snake0"
     },
+    "shop": {
+         "data": "hwQIAAgAAAAAAAAAAAAAAAAFAFBQUABQBVAAUAUABVBQAAVQAABQBQ==",
+         "mimeType": "image/x-mkcd-f4",
+         "tilemapTile": true,
+         "displayName": "shop0"
+    },
     "level12": {
         "id": "level12",
         "mimeType": "application/mkcd-tilemap",
