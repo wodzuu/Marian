@@ -44,7 +44,11 @@ enum GameTiles {
     GROUND_A3 = 11,
     WALL_2 = 12,
     WALL_3 = 13,
-    SHOP = 14
+    SHOP = 14,
+    SHOP_GUN = 15,
+    SHOP_BOMB = 16,
+    SHOP_LIFE = 17,
+    SHOP_ROPE = 18
 }
 
 const arcadeTiles = [
@@ -62,7 +66,11 @@ const arcadeTiles = [
     myTiles.groundA3,
     myTiles.wall2,
     myTiles.wall3,
-    myTiles.shop
+    myTiles.shop,
+    myTiles.tile12,
+    myTiles.tile14,
+    myTiles.tile15,
+    myTiles.tile21
 ]
 
 
@@ -153,6 +161,18 @@ namespace myCategory {
         return tiles.tileAtLocationEquals(loc, tile) || sprite.tileKindAt(TileDirection.Center, tile)
     }
 
+    //% block="shop with %difficulty"
+    export function shop(difficulty: number = 1) {
+        const level = new Levelgen.Level(Levelgen.ROOM_WIDTH, Levelgen.ROOM_HEIGHT);
+        level.set(0, 0, Levelgen.Tiles.START)
+        level.set(Levelgen.ROOM_WIDTH - 1, Levelgen.ROOM_HEIGHT-1, Levelgen.Tiles.END)
+        level.set(2, Levelgen.ROOM_HEIGHT - 3, Levelgen.Tiles.SHOP_LIFE)
+        level.set(4, Levelgen.ROOM_HEIGHT - 3, Levelgen.Tiles.SHOP_BOMB)
+        level.set(6, Levelgen.ROOM_HEIGHT - 3, Levelgen.Tiles.SHOP_ROPE)
+        level.set(8, Levelgen.ROOM_HEIGHT - 3, Levelgen.Tiles.SHOP_GUN)
+        return toTilemap(level, 0, 0, 0);
+    }
+
     //% block="random level with %difficulty"
     export function randomLevel(difficulty: number = 1) {
         let width = difficulty <= 3 ? 2 : 3
@@ -166,6 +186,10 @@ namespace myCategory {
         const [levelMap, path] = new Levelgen.LevelGenerator(width, height).generate();
 
         const level = new Levelgen.LevelAssembler().assemble(roomCollection, levelMap, path);
+        return toTilemap(level, coinChance, spikeChance, snakeChance);
+    }
+
+    function toTilemap(level: Levelgen.Level, coinChance: number, spikeChance: number, snakeChance: number) {
         const walledLevel = level.getWalled();
         const map = walledLevel.getRaw()
         const height_ = walledLevel.height
@@ -173,7 +197,7 @@ namespace myCategory {
 
         const i = image.create(width_, height_)
         i.fill(0)
-        
+
         for (let y = 0; y < height_; y++) {
             for (let x = 0; x < width_; x++) {
                 const index = y * width_ + x;
@@ -183,7 +207,7 @@ namespace myCategory {
                         tile = Math.random() < coinChance ? GameTiles.COIN : tile = GameTiles.NOTHING;
                         break;
                     case Levelgen.Tiles.SPIKES:
-                        if(y < height_ - 1 && Levelgen.isWalkableTileType(walledLevel.get(x, y + 1))) {
+                        if (y < height_ - 1 && Levelgen.isWalkableTileType(walledLevel.get(x, y + 1))) {
                             tile = Math.random() < spikeChance ? GameTiles.SPIKES : GameTiles.NOTHING
                         } else {
                             tile = GameTiles.NOTHING;
@@ -213,6 +237,18 @@ namespace myCategory {
                         break;
                     case Levelgen.Tiles.SHOP:
                         tile = GameTiles.SHOP
+                        break;
+                    case Levelgen.Tiles.SHOP_GUN:
+                        tile = GameTiles.SHOP_GUN
+                        break;
+                    case Levelgen.Tiles.SHOP_LIFE:
+                        tile = GameTiles.SHOP_LIFE
+                        break;
+                    case Levelgen.Tiles.SHOP_ROPE:
+                        tile = GameTiles.SHOP_ROPE
+                        break;
+                    case Levelgen.Tiles.SHOP_BOMB:
+                        tile = GameTiles.SHOP_BOMB
                         break;
                     default:
                         tile = GameTiles.NOTHING

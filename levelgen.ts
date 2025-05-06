@@ -96,7 +96,11 @@ namespace Levelgen {
         SPIKES = 6,
         SNAKE = 7,
         BRICK = 8,
-        SHOP = 9
+        SHOP = 9,
+        SHOP_LIFE = 10,
+        SHOP_ROPE = 11,
+        SHOP_BOMB = 12,
+        SHOP_GUN = 13
     }
 
     export const ROOM_WIDTH = 10;
@@ -511,7 +515,7 @@ namespace Levelgen {
         }
     }
 
-    class Level {
+    export class Level {
         width: number;
         height: number;
         level: number[];
@@ -564,8 +568,12 @@ namespace Levelgen {
             return new Level(this.width + 2, this.height + 2, result);
         }
 
-        get(x: number, y: number) {
+        get(x: number, y: number): number {
             return this.level[x + y * this.width]
+        }
+
+        set(x: number, y: number, tile: number) {
+            this.level[x + y * this.width] = tile
         }
 
         getRaw() {

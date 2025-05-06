@@ -22,12 +22,162 @@ function stwórzMariana () {
     controller.moveSprite(marian, 50, 0)
     marian.ay = 150
 }
+function załadujSklep (poziom: number) {
+    snakeSpeed = Math.min(poziom * 5, 30)
+    sprites.destroyAllSpritesOfKind(SpriteKind.Food)
+    sprites.destroyAllSpritesOfKind(SpriteKind.Enemy)
+    sprites.destroyAllSpritesOfKind(SpriteKind.Trap)
+    randomLevel = myCategory.shop(0)
+    scene.setBackgroundColor(15)
+    tiles.setCurrentTilemap(randomLevel)
+    pozycjaStartowaMariana = tiles.getTilesByType(assets.tile`entrance0`)[0]
+    tiles.placeOnTile(marian, pozycjaStartowaMariana)
+    for (let value3 of tiles.getTilesByType(assets.tile`spikes0`)) {
+        spikesSprite = sprites.create(img`
+            . . . . . . . . 
+            . . . . . . . . 
+            . . . 7 . . . . 
+            . 7 . 7 . . . 7 
+            . 7 . 7 . 7 . 7 
+            . 7 . 7 7 7 . 7 
+            7 7 7 7 7 7 . 7 
+            7 7 7 7 7 7 7 7 
+            `, SpriteKind.Trap)
+        tiles.placeOnTile(spikesSprite, value3)
+        tiles.setTileAt(value3, assets.tile`myTile1`)
+    }
+    for (let value of tiles.getTilesByType(assets.tile`coin0`)) {
+        coinSprite = sprites.create(assets.image`Marian0`, SpriteKind.Food)
+        animation.runImageAnimation(
+        coinSprite,
+        [img`
+            . . . 4 4 . . . 
+            . . 4 5 5 4 . . 
+            . . 4 4 5 4 . . 
+            . . 4 4 5 4 . . 
+            . . 4 4 5 4 . . 
+            . . 4 4 5 4 . . 
+            . . 4 5 5 4 . . 
+            . . . 4 4 . . . 
+            `,img`
+            . . . 4 4 . . . 
+            . . 4 5 5 4 . . 
+            . 4 5 4 5 5 4 . 
+            . 4 5 4 5 5 4 . 
+            . 4 5 4 5 5 4 . 
+            . 4 5 4 5 5 4 . 
+            . . 4 5 5 4 . . 
+            . . . 4 4 . . . 
+            `,img`
+            . . 4 4 4 . . . 
+            . 4 5 5 5 4 . . 
+            4 5 5 4 5 5 4 . 
+            4 5 4 4 4 5 4 . 
+            4 5 4 4 4 5 4 . 
+            4 5 5 4 5 5 4 . 
+            . 4 5 5 5 4 . . 
+            . . 4 4 4 . . . 
+            `,img`
+            . . 4 4 4 4 . . 
+            . 4 5 5 5 5 4 . 
+            4 5 5 4 4 5 5 4 
+            4 5 4 4 4 4 5 4 
+            4 5 4 4 4 4 5 4 
+            4 5 5 4 4 5 5 4 
+            . 4 5 5 5 5 4 . 
+            . . 4 4 4 4 . . 
+            `,img`
+            . . . 4 4 4 . . 
+            . . 4 5 5 5 4 . 
+            . 4 5 5 4 5 5 4 
+            . 4 5 4 4 4 5 4 
+            . 4 5 4 4 4 5 4 
+            . 4 5 5 4 5 5 4 
+            . . 4 5 5 5 4 . 
+            . . . 4 4 4 . . 
+            `,img`
+            . . . 4 4 . . . 
+            . . 4 5 5 4 . . 
+            . 4 5 5 4 5 4 . 
+            . 4 5 5 4 5 4 . 
+            . 4 5 5 4 5 4 . 
+            . 4 5 5 4 5 4 . 
+            . . 4 5 5 4 . . 
+            . . . 4 4 . . . 
+            `,img`
+            . . . 4 4 . . . 
+            . . 4 5 5 4 . . 
+            . . 4 5 4 4 . . 
+            . . 4 5 4 4 . . 
+            . . 4 5 4 4 . . 
+            . . 4 5 4 4 . . 
+            . . 4 5 5 4 . . 
+            . . . 4 4 . . . 
+            `],
+        50,
+        true
+        )
+        tiles.placeOnTile(coinSprite, value)
+        tiles.setTileAt(value, assets.tile`myTile1`)
+    }
+    for (let value2 of tiles.getTilesByType(assets.tile`snake0`)) {
+        snakeSprite = sprites.create(assets.image`Marian0`, SpriteKind.Enemy)
+        animation.runImageAnimation(
+        snakeSprite,
+        [img`
+            . . 4 5 5 . . . 
+            . . 5 . 4 5 5 . 
+            . 5 . . 4 5 5 . 
+            . 4 5 . . . . . 
+            . . 4 5 5 5 5 . 
+            . . . . . . 4 5 
+            . . . . . . 4 5 
+            . . 5 5 5 5 5 . 
+            `,img`
+            . . 4 5 5 . . . 
+            . . 5 . 4 5 5 . 
+            . 5 . . 4 5 5 . 
+            . 4 5 . . . . . 
+            . . 4 5 5 5 5 . 
+            . . . . . . 4 5 
+            . . . . . . 4 5 
+            . . 5 5 5 5 5 . 
+            `,img`
+            . . 4 5 5 . . . 
+            . . 5 . 4 5 5 . 
+            . 5 . . 4 5 5 . 
+            . 4 5 . . . . . 
+            . . 4 5 5 5 . . 
+            . . . . . 4 5 . 
+            . . . . . 4 5 . 
+            . 5 5 5 5 5 . . 
+            `,img`
+            . . 4 5 5 5 . . 
+            . . 5 . . 4 5 5 
+            . 4 5 . . 4 5 5 
+            . 4 5 . . . . . 
+            . . 4 5 5 . . . 
+            . . . . 4 5 . . 
+            . . . . 4 5 . . 
+            5 5 5 5 5 . . . 
+            `],
+        111,
+        true
+        )
+        tiles.placeOnTile(snakeSprite, value2)
+        tiles.setTileAt(value2, assets.tile`myTile1`)
+        snakeSprite.vx = snakeSpeed
+    }
+}
 function wDół () {
     if (myCategory.isOnTop(marian, assets.tile`ladder0`)) {
         marian.y += 1
         marian.x = marian.tilemapLocation().x
     }
 }
+scene.onOverlapTile(SpriteKind.Player, assets.tile`shop0`, function (sprite, location) {
+    załadujSklep(poziom)
+})
 function stwórzAnimacje () {
     marianIdzieWLewo = animation.createAnimation(ActionKind.Walking, 100)
     coinAnimation = animation.createAnimation(ActionKind.Walking, 100)
@@ -107,9 +257,9 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSpr
     music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.InBackground)
 })
 function załadujPoziom (poziom: number) {
-    snakeSpeed = Math.min(poziom * 5, 30)
     info.changeLifeBy(1)
     game.splash("Poziom", poziom)
+    snakeSpeed = Math.min(poziom * 5, 30)
     sprites.destroyAllSpritesOfKind(SpriteKind.Food)
     sprites.destroyAllSpritesOfKind(SpriteKind.Enemy)
     sprites.destroyAllSpritesOfKind(SpriteKind.Trap)
@@ -270,14 +420,14 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
     pause(invincibilityPeriod)
 })
 let hittingSpikes = 0
+let coinAnimation: animation.Animation = null
+let marianIdzieWLewo: animation.Animation = null
 let snakeSprite: Sprite = null
 let coinSprite: Sprite = null
 let spikesSprite: Sprite = null
 let pozycjaStartowaMariana: tiles.Location = null
 let randomLevel: tiles.TileMapData = null
 let snakeSpeed = 0
-let coinAnimation: animation.Animation = null
-let marianIdzieWLewo: animation.Animation = null
 let mySprite = 0
 let invincibilityPeriod = 0
 let poziom = 0
