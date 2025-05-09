@@ -305,7 +305,19 @@ function boom (location: tiles.Location) {
         }
     }
     for (let value of sprites.allOfKind(SpriteKind.Trap)) {
-    	
+        if (myCategory.isSpriteWithinTaxiDistanceFromLocation(value, 1.5, location)) {
+            sprites.destroy(value)
+        }
+    }
+    for (let value of sprites.allOfKind(SpriteKind.Enemy)) {
+        if (myCategory.isSpriteWithinTaxiDistanceFromLocation(value, 1.5, location)) {
+            sprites.destroy(value)
+        }
+    }
+    for (let value of sprites.allOfKind(SpriteKind.Player)) {
+        if (myCategory.isSpriteWithinTaxiDistanceFromLocation(value, 1.5, location)) {
+            info.changeLifeBy(-1)
+        }
     }
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`life`, function (sprite, location) {

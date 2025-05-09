@@ -173,6 +173,13 @@ namespace myCategory {
         return toTilemap(level.getWalled().getWalled().getWalled().getWalled(), 0, 0, 0);
     }
 
+    //% block="is %sprite within taxi %distance from tile %location"
+    export function isSpriteWithinTaxiDistanceFromLocation(sprite: Sprite, distance: number, location: tiles.Location): boolean {
+        let centerX = location.column * 8 + 4;
+        let centerY = location.row * 8 + 4;
+        return Math.abs(sprite.x-centerX) < (distance * 8) && Math.abs(sprite.y-centerY) < (distance * 8);
+    }
+
     //% block="random level with %difficulty"
     export function randomLevel(difficulty: number = 1) {
         let width = difficulty <= 3 ? 2 : 3
