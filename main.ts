@@ -7,6 +7,7 @@ enum ActionKind {
 }
 namespace SpriteKind {
     export const Trap = SpriteKind.create()
+    export const Bomb = SpriteKind.create()
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Trap, function (sprite, otherSprite) {
     if (sprite.vy > 0 && !(sprite.isHittingTile(CollisionDirection.Bottom)) || sprite.y < otherSprite.top) {
@@ -22,6 +23,9 @@ function stwórzMariana () {
     controller.moveSprite(marian, 50, 0)
     marian.ay = 150
 }
+controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
+    rzućBombę()
+})
 function załadujSklep (poziom: number) {
     clearLevel()
     tiles.setCurrentTilemap(myCategory.shop(poziom))
@@ -292,6 +296,18 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`exit0`, function (sprite, loc
     poziom = poziom + 1
     załadujPoziom(poziom)
 })
+function boom (location: tiles.Location) {
+    tiles.setTileAt(tiles.getTileLocation(0, 0), assets.tile`life`)
+    for (let y = 0; y <= 2; y++) {
+        for (let x = 0; x <= 2; x++) {
+            tiles.setTileAt(tiles.getTileLocation(location.column - 1 + x, location.row - 1 + y), assets.tile`myTile1`)
+            tiles.setWallAt(tiles.getTileLocation(location.column - 1 + x, location.row - 1 + y), false)
+        }
+    }
+    for (let value of sprites.allOfKind(SpriteKind.Trap)) {
+    	
+    }
+}
 scene.onOverlapTile(SpriteKind.Player, assets.tile`life`, function (sprite, location) {
     if (info.score() >= life_cost_value) {
         info.changeScoreBy(0 - life_cost_value)
@@ -309,7 +325,48 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
     }
     pause(invincibilityPeriod)
 })
+function rzućBombę () {
+    bomba = sprites.createProjectileFromSprite(img`
+        . . . . . . . . 
+        . b b . . . . . 
+        . . b 6 6 6 . . 
+        . 6 6 6 1 1 6 . 
+        . 6 6 6 6 1 6 . 
+        . 6 6 6 6 6 6 . 
+        . 6 6 6 6 6 6 . 
+        . . 6 6 6 6 . . 
+        `, marian, 0, 0)
+    animation.runImageAnimation(
+    bomba,
+    [img`
+        . . . . . . . . 
+        . a a . . . . . 
+        . . a 6 6 6 . . 
+        . 6 6 6 1 1 6 . 
+        . 6 6 6 6 1 6 . 
+        . 6 6 6 6 6 6 . 
+        . 6 6 6 6 6 6 . 
+        . . 6 6 6 6 . . 
+        `,img`
+        . . . . . . . . 
+        . a a . . . . . 
+        . . a 3 3 3 . . 
+        . 3 3 3 1 1 3 . 
+        . 3 3 3 3 1 3 . 
+        . 3 3 3 3 3 3 . 
+        . 3 3 3 3 3 3 . 
+        . . 3 3 3 3 . . 
+        `],
+    500,
+    true
+    )
+    pause(3000)
+    bomba.sayText("boom")
+    boom(bomba.tilemapLocation())
+    sprites.destroy(bomba, effects.fire, 500)
+}
 let hittingSpikes = 0
+let bomba: Sprite = null
 let coinAnimation: animation.Animation = null
 let marianIdzieWLewo: animation.Animation = null
 let life_cost: TextSprite = null
