@@ -8,14 +8,43 @@ enum ActionKind {
 namespace SpriteKind {
     export const Trap = SpriteKind.create()
     export const Bomb = SpriteKind.create()
+    export const UI = SpriteKind.create()
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Trap, function (sprite, otherSprite) {
     if (sprite.vy > 0 && !(sprite.isHittingTile(CollisionDirection.Bottom)) || sprite.y < otherSprite.top) {
-        info.changeLifeBy(-1)
+        changeLife(-1)
         music.powerDown.play()
     }
     pause(invincibilityPeriod)
 })
+function buildStatusBar () {
+    statusBarImage = image.create(scene.screenWidth(), 12)
+    statusBarSprite = sprites.create(statusBarImage, SpriteKind.UI)
+    statusBarSprite.setPosition(scene.screenWidth() / 2, 6)
+    makeUISprite(statusBarSprite)
+    coinSprite = sprites.create(assets.image`Marian0`, SpriteKind.UI)
+    coinSprite.setPosition(scene.screenWidth() / 1.4, 5)
+    makeUISprite(coinSprite)
+    pointsTextBarSprite = textsprite.create("", 0, 1)
+    pointsTextBarSprite.setPosition(coinSprite.x + 8, 5)
+    makeUISprite(pointsTextBarSprite)
+    heartSprite = sprites.create(img`
+        . 2 2 . . 2 2 . 
+        2 2 2 2 . 2 2 2 
+        2 2 2 2 2 2 2 2 
+        3 2 2 2 2 2 2 2 
+        . 2 2 2 2 2 2 . 
+        . 3 2 2 2 2 3 . 
+        . . 2 2 2 2 . . 
+        . . . 2 2 . . . 
+        `, SpriteKind.UI)
+    heartSprite.setPosition(pointsTextBarSprite.x + 16, 5)
+    makeUISprite(heartSprite)
+    lifeTextBarSprite = textsprite.create("", 0, 1)
+    lifeTextBarSprite.setPosition(heartSprite.x + 8, 5)
+    makeUISprite(lifeTextBarSprite)
+    updateStatusBar()
+}
 function stwórzMariana () {
     marian = sprites.create(marianek, SpriteKind.Player)
     mySprite = 0
@@ -26,6 +55,12 @@ function stwórzMariana () {
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     rzućBombę()
 })
+function makeUISprite (sprite: Sprite) {
+    sprite.setFlag(SpriteFlag.RelativeToCamera, true)
+    sprite.setFlag(SpriteFlag.Ghost, true)
+    sprite.setKind(SpriteKind.UI)
+    sprite.z = 1000
+}
 function załadujSklep (poziom: number) {
     clearLevel()
     tiles.setCurrentTilemap(myCategory.shop(poziom))
@@ -262,9 +297,14 @@ function stwórzAnimacje () {
 scene.onOverlapTile(SpriteKind.Player, assets.tile`spikes0`, function (sprite, location) {
 	
 })
-info.onLifeZero(function () {
-    game.gameOver(false)
-})
+function updateStatusBar () {
+    lifeTextBarSprite.setText(convertToText(life))
+    pointsTextBarSprite.setText(convertToText(points))
+}
+function changePoints (diff: number) {
+    points = points + diff
+    updateStatusBar()
+}
 function wGórę () {
     if (marian.isHittingTile(CollisionDirection.Bottom) || myCategory.isOnTop(marian, assets.tile`ladder0`)) {
         marian.vy = -100
@@ -275,7 +315,7 @@ function wGórę () {
     }
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
-    info.changeScoreBy(1)
+    changePoints(1)
     sprites.destroy(otherSprite, effects.trail, 100)
     music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.InBackground)
 })
@@ -296,6 +336,10 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`exit0`, function (sprite, loc
     poziom = poziom + 1
     załadujPoziom(poziom)
 })
+function changeLife (diff: number) {
+    life = life + diff
+    updateStatusBar()
+}
 function boom (location: tiles.Location) {
     for (let y = 0; y <= 2; y++) {
         for (let x = 0; x <= 2; x++) {
@@ -320,9 +364,9 @@ function boom (location: tiles.Location) {
     }
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`life`, function (sprite, location) {
-    if (info.score() >= life_cost_value) {
-        info.changeScoreBy(0 - life_cost_value)
-        info.changeLifeBy(1)
+    if (points >= life_cost_value) {
+        changeLife(1)
+        changePoints(0 - life_cost_value)
         music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.InBackground)
     }
 })
@@ -331,7 +375,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
         otherSprite.destroy(effects.ashes, 250)
         music.powerUp.play()
     } else {
-        info.changeLifeBy(-1)
+        changeLife(-1)
         music.powerDown.play()
     }
     pause(invincibilityPeriod)
@@ -386,11 +430,18 @@ let coinAnimation: animation.Animation = null
 let marianIdzieWLewo: animation.Animation = null
 let life_cost: TextSprite = null
 let snakeSprite: Sprite = null
-let coinSprite: Sprite = null
 let spikesSprite: Sprite = null
 let pozycjaStartowaMariana: tiles.Location = null
 let snakeSpeed = 0
 let mySprite = 0
+let lifeTextBarSprite: TextSprite = null
+let heartSprite: Sprite = null
+let pointsTextBarSprite: TextSprite = null
+let coinSprite: Sprite = null
+let statusBarSprite: Sprite = null
+let statusBarImage: Image = null
+let life = 0
+let points = 0
 let rope_cost_value = 0
 let bomb_cost_value = 0
 let gun_cost_value = 0
@@ -420,8 +471,9 @@ stwórzAnimacje()
 załadujPoziom(poziom)
 game.setGameOverEffect(true, effects.confetti)
 game.setGameOverMessage(true, "Brawo!")
-info.setLife(2)
-info.setScore(0)
+points = 0
+life = 2
+buildStatusBar()
 // bumper movement
 game.onUpdate(function () {
     for (let value9 of sprites.allOfKind(SpriteKind.Enemy)) {
@@ -430,6 +482,9 @@ game.onUpdate(function () {
         } else if (myCategory.isAtTheLeftEdge(value9)) {
             value9.vx = snakeSpeed
         }
+    }
+    if (life <= 0) {
+        game.gameOver(false)
     }
 })
 game.onUpdate(function () {
