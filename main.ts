@@ -177,24 +177,24 @@ function setUpLevelObjects (poziom: number) {
         tiles.setTileAt(value2, assets.tile`myTile1`)
         snakeSprite.vx = snakeSpeed
     }
-    for (let value2 of tiles.getTilesByType(assets.tile`life`)) {
+    for (let value22 of tiles.getTilesByType(assets.tile`life`)) {
         life_cost = textsprite.create(convertToText(life_cost_value), 0, 1)
-        tiles.placeOnTile(life_cost, value2)
+        tiles.placeOnTile(life_cost, value22)
         life_cost.y += -8
     }
-    for (let value2 of tiles.getTilesByType(assets.tile`gun`)) {
+    for (let value23 of tiles.getTilesByType(assets.tile`gun`)) {
         life_cost = textsprite.create(convertToText(gun_cost_value), 0, 1)
-        tiles.placeOnTile(life_cost, value2)
+        tiles.placeOnTile(life_cost, value23)
         life_cost.y += -8
     }
-    for (let value2 of tiles.getTilesByType(assets.tile`bomb`)) {
+    for (let value24 of tiles.getTilesByType(assets.tile`bomb`)) {
         life_cost = textsprite.create(convertToText(bomb_cost_value), 0, 1)
-        tiles.placeOnTile(life_cost, value2)
+        tiles.placeOnTile(life_cost, value24)
         life_cost.y += -8
     }
-    for (let value2 of tiles.getTilesByType(assets.tile`rope`)) {
+    for (let value25 of tiles.getTilesByType(assets.tile`rope`)) {
         life_cost = textsprite.create(convertToText(rope_cost_value), 0, 1)
-        tiles.placeOnTile(life_cost, value2)
+        tiles.placeOnTile(life_cost, value25)
         life_cost.y += -8
     }
 }
@@ -297,25 +297,24 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`exit0`, function (sprite, loc
     załadujPoziom(poziom)
 })
 function boom (location: tiles.Location) {
-    tiles.setTileAt(tiles.getTileLocation(0, 0), assets.tile`life`)
     for (let y = 0; y <= 2; y++) {
         for (let x = 0; x <= 2; x++) {
             tiles.setTileAt(tiles.getTileLocation(location.column - 1 + x, location.row - 1 + y), assets.tile`myTile1`)
             tiles.setWallAt(tiles.getTileLocation(location.column - 1 + x, location.row - 1 + y), false)
         }
     }
-    for (let value of sprites.allOfKind(SpriteKind.Trap)) {
-        if (myCategory.isSpriteWithinTaxiDistanceFromLocation(value, 1.5, location)) {
-            sprites.destroy(value)
+    for (let value4 of sprites.allOfKind(SpriteKind.Trap)) {
+        if (myCategory.isSpriteWithinTaxiDistanceFromLocation(value4, 1.5, location)) {
+            sprites.destroy(value4)
         }
     }
-    for (let value of sprites.allOfKind(SpriteKind.Enemy)) {
-        if (myCategory.isSpriteWithinTaxiDistanceFromLocation(value, 1.5, location)) {
-            sprites.destroy(value)
+    for (let value5 of sprites.allOfKind(SpriteKind.Enemy)) {
+        if (myCategory.isSpriteWithinTaxiDistanceFromLocation(value5, 1.5, location)) {
+            sprites.destroy(value5)
         }
     }
-    for (let value of sprites.allOfKind(SpriteKind.Player)) {
-        if (myCategory.isSpriteWithinTaxiDistanceFromLocation(value, 1.5, location)) {
+    for (let value6 of sprites.allOfKind(SpriteKind.Player)) {
+        if (myCategory.isSpriteWithinTaxiDistanceFromLocation(value6, 1.5, location)) {
             info.changeLifeBy(-1)
         }
     }
@@ -338,44 +337,48 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
     pause(invincibilityPeriod)
 })
 function rzućBombę () {
-    bomba = sprites.createProjectileFromSprite(img`
-        . . . . . . . . 
-        . b b . . . . . 
-        . . b 6 6 6 . . 
-        . 6 6 6 1 1 6 . 
-        . 6 6 6 6 1 6 . 
-        . 6 6 6 6 6 6 . 
-        . 6 6 6 6 6 6 . 
-        . . 6 6 6 6 . . 
-        `, marian, 0, 0)
-    animation.runImageAnimation(
-    bomba,
-    [img`
-        . . . . . . . . 
-        . a a . . . . . 
-        . . a 6 6 6 . . 
-        . 6 6 6 1 1 6 . 
-        . 6 6 6 6 1 6 . 
-        . 6 6 6 6 6 6 . 
-        . 6 6 6 6 6 6 . 
-        . . 6 6 6 6 . . 
-        `,img`
-        . . . . . . . . 
-        . a a . . . . . 
-        . . a 3 3 3 . . 
-        . 3 3 3 1 1 3 . 
-        . 3 3 3 3 1 3 . 
-        . 3 3 3 3 3 3 . 
-        . 3 3 3 3 3 3 . 
-        . . 3 3 3 3 . . 
-        `],
-    500,
-    true
-    )
-    pause(3000)
-    bomba.sayText("boom")
-    boom(bomba.tilemapLocation())
-    sprites.destroy(bomba, effects.fire, 500)
+    if (sprites.allOfKind(SpriteKind.Bomb).length == 0) {
+        bomba = sprites.create(img`
+            . . . . . . . . 
+            . b b . . . . . 
+            . . b 6 6 6 . . 
+            . 6 6 6 1 1 6 . 
+            . 6 6 6 6 1 6 . 
+            . 6 6 6 6 6 6 . 
+            . 6 6 6 6 6 6 . 
+            . . 6 6 6 6 . . 
+            `, SpriteKind.Bomb)
+        bomba.ay = 100
+        bomba.setPosition(marian.x, marian.y)
+        animation.runImageAnimation(
+        bomba,
+        [img`
+            . . . . . . . . 
+            . a a . . . . . 
+            . . a 6 6 6 . . 
+            . 6 6 6 1 1 6 . 
+            . 6 6 6 6 1 6 . 
+            . 6 6 6 6 6 6 . 
+            . 6 6 6 6 6 6 . 
+            . . 6 6 6 6 . . 
+            `,img`
+            . . . . . . . . 
+            . a a . . . . . 
+            . . a 3 3 3 . . 
+            . 3 3 3 1 1 3 . 
+            . 3 3 3 3 1 3 . 
+            . 3 3 3 3 3 3 . 
+            . 3 3 3 3 3 3 . 
+            . . 3 3 3 3 . . 
+            `],
+        500,
+        true
+        )
+        pause(3000)
+        bomba.sayText("boom")
+        boom(bomba.tilemapLocation())
+        sprites.destroy(bomba, effects.fire, 500)
+    }
 }
 let hittingSpikes = 0
 let bomba: Sprite = null
@@ -463,6 +466,9 @@ game.onUpdateInterval(10, function () {
     } else if (controller.down.isPressed()) {
         wDół()
     } else {
+    	
+    }
+    if (controller.B.isPressed()) {
     	
     }
 })
