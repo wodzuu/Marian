@@ -161,6 +161,11 @@ namespace myCategory {
         return tiles.tileAtLocationEquals(loc, tile) || sprite.tileKindAt(TileDirection.Center, tile)
     }
 
+    //% block="is tile under or behind %sprite climbable"
+    export function isOnTopClimbable(sprite: Sprite): boolean {
+        return isOnTop(sprite, myTiles.ladder) || isOnTop(sprite, myTiles.tile22) // tile22 - rope
+    }
+
     //% block="shop with %difficulty"
     export function shop(difficulty: number = 1) {
         const level = new Levelgen.Level(Levelgen.ROOM_WIDTH, Levelgen.ROOM_HEIGHT);

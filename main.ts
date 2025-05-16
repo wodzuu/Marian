@@ -67,7 +67,7 @@ function załadujSklep (poziom: number) {
     setUpLevelObjects(poziom)
 }
 function wDół () {
-    if (myCategory.isOnTop(marian, assets.tile`ladder0`)) {
+    if (myCategory.isOnTopClimbable(marian)) {
         marian.y += 1
         marian.x = marian.tilemapLocation().x
     }
@@ -311,10 +311,10 @@ function changePoints (diff: number) {
     updateStatusBar()
 }
 function wGórę () {
-    if (marian.isHittingTile(CollisionDirection.Bottom) || myCategory.isOnTop(marian, assets.tile`ladder0`)) {
+    if (marian.isHittingTile(CollisionDirection.Bottom) || myCategory.isOnTopClimbable(marian)) {
         marian.vy = -100
     }
-    if (myCategory.isOnTop(marian, assets.tile`ladder0`)) {
+    if (myCategory.isOnTopClimbable(marian)) {
         marian.y += -1
         marian.x = marian.tilemapLocation().x
     }
@@ -479,6 +479,26 @@ game.setGameOverMessage(true, "Brawo!")
 points = 0
 life = 2
 buildStatusBar()
+game.onUpdate(function () {
+    if (marian.vx < 0) {
+        animation.setAction(marian, ActionKind.Walking)
+    } else if (marian.vx > 0) {
+        animation.setAction(marian, ActionKind.Walking)
+    } else {
+        animation.setAction(marian, ActionKind.Walking)
+    }
+    if (myCategory.isOnTopClimbable(marian)) {
+        marian.ay = 0
+        marian.vy = 0
+    } else {
+        marian.ay = 300
+    }
+    if (marian.tileKindAt(TileDirection.Bottom, assets.tile`myTile`)) {
+        tiles.setTileAt(marian.tilemapLocation().getNeighboringLocation(CollisionDirection.Bottom), assets.tile`myTile2`)
+        scene.cameraShake(2, 500)
+        music.play(music.melodyPlayable(music.thump), music.PlaybackMode.InBackground)
+    }
+})
 // bumper movement
 game.onUpdate(function () {
     for (let value9 of sprites.allOfKind(SpriteKind.Enemy)) {
@@ -490,26 +510,6 @@ game.onUpdate(function () {
     }
     if (life <= 0) {
         game.gameOver(false)
-    }
-})
-game.onUpdate(function () {
-    if (marian.vx < 0) {
-        animation.setAction(marian, ActionKind.Walking)
-    } else if (marian.vx > 0) {
-        animation.setAction(marian, ActionKind.Walking)
-    } else {
-        animation.setAction(marian, ActionKind.Walking)
-    }
-    if (myCategory.isOnTop(marian, assets.tile`ladder0`)) {
-        marian.ay = 0
-        marian.vy = 0
-    } else {
-        marian.ay = 300
-    }
-    if (marian.tileKindAt(TileDirection.Bottom, assets.tile`myTile`)) {
-        tiles.setTileAt(marian.tilemapLocation().getNeighboringLocation(CollisionDirection.Bottom), assets.tile`myTile2`)
-        scene.cameraShake(2, 500)
-        music.play(music.melodyPlayable(music.thump), music.PlaybackMode.InBackground)
     }
 })
 game.onUpdateInterval(25, function () {
