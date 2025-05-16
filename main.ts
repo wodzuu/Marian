@@ -53,7 +53,7 @@ function stwórzMariana () {
     marian.ay = 150
 }
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
-    rzućBombę()
+    rzućLinę()
 })
 function makeUISprite (sprite: Sprite) {
     sprite.setFlag(SpriteFlag.RelativeToCamera, true)
@@ -301,6 +301,11 @@ function updateStatusBar () {
     lifeTextBarSprite.setText(convertToText(life))
     pointsTextBarSprite.setText(convertToText(points))
 }
+function rzućLinę () {
+    if (tiles.tileAtLocationEquals(marian.tilemapLocation(), assets.tile`myTile1`)) {
+        tiles.setTileAt(marian.tilemapLocation(), assets.tile`rope0`)
+    }
+}
 function changePoints (diff: number) {
     points = points + diff
     updateStatusBar()
@@ -505,6 +510,13 @@ game.onUpdate(function () {
         tiles.setTileAt(marian.tilemapLocation().getNeighboringLocation(CollisionDirection.Bottom), assets.tile`myTile2`)
         scene.cameraShake(2, 500)
         music.play(music.melodyPlayable(music.thump), music.PlaybackMode.InBackground)
+    }
+})
+game.onUpdateInterval(25, function () {
+    for (let value of tiles.getTilesByType(assets.tile`rope0`)) {
+        if (tiles.tileAtLocationEquals(value.getNeighboringLocation(CollisionDirection.Top), assets.tile`myTile1`)) {
+            tiles.setTileAt(value.getNeighboringLocation(CollisionDirection.Top), assets.tile`rope0`)
+        }
     }
 })
 game.onUpdateInterval(1000, function () {
