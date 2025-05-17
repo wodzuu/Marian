@@ -46,8 +46,8 @@ function buildStatusBar () {
     bombSprite = sprites.create(img`
         . . 2 b b . . . 
         . 4 5 b b b b . 
-        6 b f f b b b . 
-        b b b f b b b b 
+        6 b 6 6 b 1 b . 
+        b b b 6 b b b b 
         b b b b b b b b 
         6 b b b b b b . 
         . b b b b b b . 
@@ -216,6 +216,7 @@ function setUpLevelObjects (poziom: number) {
     }
     for (let value2 of tiles.getTilesByType(assets.tile`snake0`)) {
         snakeSprite = sprites.create(assets.image`Marian0`, SpriteKind.Enemy)
+        snakeSprite.ay = 150
         animation.runImageAnimation(
         snakeSprite,
         [img`
@@ -366,9 +367,11 @@ controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
     updateStatusBar()
 })
 function rzućLinę () {
-    if (tiles.tileAtLocationEquals(marian.tilemapLocation(), assets.tile`myTile1`)) {
-        tiles.setTileAt(marian.tilemapLocation(), assets.tile`rope0`)
-        ropes = ropes - 1
+    if (ropes > 0) {
+        if (tiles.tileAtLocationEquals(marian.tilemapLocation(), assets.tile`myTile1`)) {
+            tiles.setTileAt(marian.tilemapLocation(), assets.tile`rope0`)
+            ropes = ropes - 1
+        }
     }
 }
 function changePoints (diff: number) {
@@ -451,48 +454,47 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
     pause(invincibilityPeriod)
 })
 function rzućBombę () {
-    if (sprites.allOfKind(SpriteKind.Bomb).length == 0) {
-        bomba = sprites.create(img`
-            . . . . . . . . 
-            . b b . . . . . 
-            . . b 6 6 6 . . 
-            . 6 6 6 1 1 6 . 
-            . 6 6 6 6 1 6 . 
-            . 6 6 6 6 6 6 . 
-            . 6 6 6 6 6 6 . 
-            . . 6 6 6 6 . . 
-            `, SpriteKind.Bomb)
-        bomba.ay = 100
-        bomba.setPosition(marian.x, marian.y)
-        animation.runImageAnimation(
-        bomba,
-        [img`
-            . . . . . . . . 
-            . a a . . . . . 
-            . . a 6 6 6 . . 
-            . 6 6 6 1 1 6 . 
-            . 6 6 6 6 1 6 . 
-            . 6 6 6 6 6 6 . 
-            . 6 6 6 6 6 6 . 
-            . . 6 6 6 6 . . 
-            `,img`
-            . . . . . . . . 
-            . a a . . . . . 
-            . . a 3 3 3 . . 
-            . 3 3 3 1 1 3 . 
-            . 3 3 3 3 1 3 . 
-            . 3 3 3 3 3 3 . 
-            . 3 3 3 3 3 3 . 
-            . . 3 3 3 3 . . 
-            `],
-        500,
-        true
-        )
-        bombs = bombs - 1
-        pause(3000)
-        bomba.sayText("boom")
-        boom(bomba.tilemapLocation())
-        sprites.destroy(bomba, effects.fire, 500)
+    if (bombs > 0) {
+        if (sprites.allOfKind(SpriteKind.Bomb).length == 0) {
+            bomba = sprites.create(img`
+                . . . . . . . . 
+                . b b . . . . . 
+                . . b 6 6 6 . . 
+                . 6 6 6 1 1 6 . 
+                . 6 6 6 6 1 6 . 
+                . 6 6 6 6 6 6 . 
+                . 6 6 6 6 6 6 . 
+                . . 6 6 6 6 . . 
+                `, SpriteKind.Bomb)
+            bomba.ay = 100
+            bomba.setPosition(marian.x, marian.y)
+            animation.runImageAnimation(
+            bomba,
+            [img`
+                . . . . . . . . 
+                . a a . . . . . 
+                . . a 6 6 6 . . 
+                . 6 6 6 1 1 6 . 
+                . 6 6 6 6 1 6 . 
+                . 6 6 6 6 6 6 . 
+                . 6 6 6 6 6 6 . 
+                . . 6 6 6 6 . . 
+                `,img`
+                . . . . . . . . 
+                . a a . . . . . 
+                . . a 3 3 3 . . 
+                . 3 3 3 1 1 3 . 
+                . 3 3 3 3 1 3 . 
+                . 3 3 3 3 3 3 . 
+                . 3 3 3 3 3 3 . 
+                . . 3 3 3 3 . . 
+                `],
+            500,
+            true
+            )
+            bombs = bombs - 1
+            myCategory.detonate(bomba)
+        }
     }
 }
 let hittingSpikes = 0
@@ -594,14 +596,6 @@ game.onUpdateInterval(25, function () {
         if (tiles.tileAtLocationEquals(value.getNeighboringLocation(CollisionDirection.Top), assets.tile`myTile1`)) {
             tiles.setTileAt(value.getNeighboringLocation(CollisionDirection.Top), assets.tile`rope0`)
         }
-    }
-})
-game.onUpdateInterval(1000, function () {
-    for (let value32 of tiles.getTilesByType(assets.tile`myTile3`)) {
-    	
-    }
-    for (let randomLevel2 of tiles.getTilesByType(assets.tile`myTile2`)) {
-        tiles.setTileAt(randomLevel2, assets.tile`myTile3`)
     }
 })
 game.onUpdateInterval(10, function () {

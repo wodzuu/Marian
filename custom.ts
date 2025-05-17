@@ -201,6 +201,16 @@ namespace myCategory {
         return toTilemap(level, coinChance, spikeChance, snakeChance);
     }
 
+    //% block="detoname %bomb"
+    export function detonate(bomba: Sprite) {
+        control.runInParallel(() => {
+            pause(3000)
+            bomba.sayText("boom")
+            boom(bomba.tilemapLocation())
+            sprites.destroy(bomba, effects.fire, 500)
+        })
+    }
+
     function toTilemap(level: Levelgen.Level, coinChance: number, spikeChance: number, snakeChance: number) {
         const walledLevel = level.getWalled();
         const map = walledLevel.getRaw()
