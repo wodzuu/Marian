@@ -23,10 +23,10 @@ function buildStatusBar () {
     statusBarSprite.setPosition(scene.screenWidth() / 2, 6)
     makeUISprite(statusBarSprite)
     coinSprite = sprites.create(assets.image`Marian0`, SpriteKind.UI)
-    coinSprite.setPosition(scene.screenWidth() / 1.4, 5)
+    coinSprite.setPosition(scene.screenWidth() / 1.4, 6)
     makeUISprite(coinSprite)
     pointsTextBarSprite = textsprite.create("", 0, 1)
-    pointsTextBarSprite.setPosition(coinSprite.x + 8, 5)
+    pointsTextBarSprite.setPosition(coinSprite.x + 8, 6)
     makeUISprite(pointsTextBarSprite)
     heartSprite = sprites.create(img`
         . 2 2 . . 2 2 . 
@@ -38,11 +38,56 @@ function buildStatusBar () {
         . . 2 2 2 2 . . 
         . . . 2 2 . . . 
         `, SpriteKind.UI)
-    heartSprite.setPosition(pointsTextBarSprite.x + 16, 5)
+    heartSprite.setPosition(pointsTextBarSprite.x + 16, 6)
     makeUISprite(heartSprite)
     lifeTextBarSprite = textsprite.create("", 0, 1)
-    lifeTextBarSprite.setPosition(heartSprite.x + 8, 5)
+    lifeTextBarSprite.setPosition(heartSprite.x + 8, 6)
     makeUISprite(lifeTextBarSprite)
+    bombSprite = sprites.create(img`
+        . . 2 b b . . . 
+        . 4 5 b b b b . 
+        6 b f f b b b . 
+        b b b f b b b b 
+        b b b b b b b b 
+        6 b b b b b b . 
+        . b b b b b b . 
+        . . 6 b b . . . 
+        `, SpriteKind.UI)
+    bombSprite.setPosition(9 / 1.4, 6)
+    makeUISprite(bombSprite)
+    bombTextBarSprite = textsprite.create("", 0, 1)
+    bombTextBarSprite.setPosition(bombSprite.x + 5, 6)
+    makeUISprite(bombTextBarSprite)
+    ropeSprite = sprites.create(img`
+        . . . e 4 . . . 
+        . . . 4 e . . . 
+        . . . 4 e . . . 
+        . . . e 4 . . . 
+        . . . e e . . . 
+        . . . 4 e . . . 
+        . . . 4 4 . . . 
+        . . . e e . . . 
+        `, SpriteKind.UI)
+    ropeSprite.setPosition(30, 6)
+    makeUISprite(ropeSprite)
+    ropeTextBarSprite = textsprite.create("", 0, 1)
+    ropeTextBarSprite.setPosition(ropeSprite.x + 5, 6)
+    makeUISprite(ropeTextBarSprite)
+    toolHighlightSprite = sprites.create(img`
+        5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+        5 . . . . . . . . . . . . . . . . . . . . . . 5 
+        5 . . . . . . . . . . . . . . . . . . . . . . 5 
+        5 . . . . . . . . . . . . . . . . . . . . . . 5 
+        5 . . . . . . . . . . . . . . . . . . . . . . 5 
+        5 . . . . . . . . . . . . . . . . . . . . . . 5 
+        5 . . . . . . . . . . . . . . . . . . . . . . 5 
+        5 . . . . . . . . . . . . . . . . . . . . . . 5 
+        5 . . . . . . . . . . . . . . . . . . . . . . 5 
+        5 . . . . . . . . . . . . . . . . . . . . . . 5 
+        5 . . . . . . . . . . . . . . . . . . . . . . 5 
+        5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 
+        `, SpriteKind.Player)
+    makeUISprite(toolHighlightSprite)
     updateStatusBar()
 }
 function stwórzMariana () {
@@ -53,7 +98,12 @@ function stwórzMariana () {
     marian.ay = 150
 }
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
-    rzućLinę()
+    if (toolIndex == 0) {
+        rzućBombę()
+    } else {
+        rzućLinę()
+    }
+    updateStatusBar()
 })
 function makeUISprite (sprite: Sprite) {
     sprite.setFlag(SpriteFlag.RelativeToCamera, true)
@@ -300,10 +350,25 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`spikes0`, function (sprite, l
 function updateStatusBar () {
     lifeTextBarSprite.setText(convertToText(life))
     pointsTextBarSprite.setText(convertToText(points))
+    bombTextBarSprite.setText(convertToText(bombs))
+    ropeTextBarSprite.setText(convertToText(ropes))
+    if (toolIndex == 0) {
+        toolHighlightSprite.setPosition(12, 6)
+    } else {
+        toolHighlightSprite.setPosition(36, 6)
+    }
 }
+controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
+    toolIndex = toolIndex + 1
+    if (toolIndex > 1) {
+        toolIndex = 0
+    }
+    updateStatusBar()
+})
 function rzućLinę () {
     if (tiles.tileAtLocationEquals(marian.tilemapLocation(), assets.tile`myTile1`)) {
         tiles.setTileAt(marian.tilemapLocation(), assets.tile`rope0`)
+        ropes = ropes - 1
     }
 }
 function changePoints (diff: number) {
@@ -423,6 +488,7 @@ function rzućBombę () {
         500,
         true
         )
+        bombs = bombs - 1
         pause(3000)
         bomba.sayText("boom")
         boom(bomba.tilemapLocation())
@@ -439,14 +505,22 @@ let spikesSprite: Sprite = null
 let pozycjaStartowaMariana: tiles.Location = null
 let snakeSpeed = 0
 let mySprite = 0
+let toolHighlightSprite: Sprite = null
+let ropeTextBarSprite: TextSprite = null
+let ropeSprite: Sprite = null
+let bombTextBarSprite: TextSprite = null
+let bombSprite: Sprite = null
 let lifeTextBarSprite: TextSprite = null
 let heartSprite: Sprite = null
 let pointsTextBarSprite: TextSprite = null
 let coinSprite: Sprite = null
 let statusBarSprite: Sprite = null
 let statusBarImage: Image = null
+let ropes = 0
+let bombs = 0
 let life = 0
 let points = 0
+let toolIndex = 0
 let rope_cost_value = 0
 let bomb_cost_value = 0
 let gun_cost_value = 0
@@ -471,6 +545,7 @@ life_cost_value = 5
 gun_cost_value = 15
 bomb_cost_value = 10
 rope_cost_value = 5
+toolIndex = 0
 stwórzMariana()
 stwórzAnimacje()
 załadujPoziom(poziom)
@@ -478,6 +553,8 @@ game.setGameOverEffect(true, effects.confetti)
 game.setGameOverMessage(true, "Brawo!")
 points = 0
 life = 2
+bombs = 99
+ropes = 99
 buildStatusBar()
 game.onUpdate(function () {
     if (marian.vx < 0) {
