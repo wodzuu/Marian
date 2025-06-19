@@ -9,6 +9,8 @@ namespace SpriteKind {
     export const Trap = SpriteKind.create()
     export const Bomb = SpriteKind.create()
     export const UI = SpriteKind.create()
+    export const nabój_serce = SpriteKind.create()
+    export const LovingEnemy = SpriteKind.create()
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Trap, function (sprite, otherSprite) {
     if (sprite.vy > 0 && !(sprite.isHittingTile(CollisionDirection.Bottom)) || sprite.y < otherSprite.top) {
@@ -100,8 +102,10 @@ function stwórzMariana () {
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     if (toolIndex == 0) {
         rzućBombę()
-    } else {
+    } else if (toolIndex == 1) {
         rzućLinę()
+    } else {
+        strzelaj()
     }
     updateStatusBar()
 })
@@ -115,6 +119,32 @@ function załadujSklep (poziom: number) {
     clearLevel()
     tiles.setCurrentTilemap(myCategory.shop(poziom))
     setUpLevelObjects(poziom)
+}
+function strzelaj () {
+    if (kierunek > 0) {
+        nabój_serce = sprites.createProjectileFromSprite(img`
+            . . . . . . . . 
+            . 3 3 . . 3 3 . 
+            3 3 3 3 3 3 3 3 
+            3 3 3 3 3 3 3 3 
+            . 3 3 3 3 3 3 . 
+            . . 3 3 3 3 . . 
+            . . . 3 3 . . . 
+            . . . . . . . . 
+            `, marian, 50, 0)
+    } else {
+        nabój_serce = sprites.createProjectileFromSprite(img`
+            . . . . . . . . 
+            . 3 3 . . 3 3 . 
+            3 3 3 3 3 3 3 3 
+            3 3 3 3 3 3 3 3 
+            . 3 3 3 3 3 3 . 
+            . . 3 3 3 3 . . 
+            . . . 3 3 . . . 
+            . . . . . . . . 
+            `, marian, -50, 0)
+    }
+    nabój_serce.setKind(SpriteKind.nabój_serce)
 }
 function wDół () {
     if (myCategory.isOnTopClimbable(marian)) {
@@ -345,6 +375,11 @@ function stwórzAnimacje () {
         . . . . . . . . . . . . . . . . 
         `)
 }
+sprites.onOverlap(SpriteKind.nabój_serce, SpriteKind.Food, function (sprite, otherSprite) {
+    sprites.destroy(otherSprite)
+    sprites.destroy(sprite)
+    music.play(music.melodyPlayable(music.wawawawaa), music.PlaybackMode.InBackground)
+})
 scene.onOverlapTile(SpriteKind.Player, assets.tile`spikes0`, function (sprite, location) {
 	
 })
@@ -355,13 +390,15 @@ function updateStatusBar () {
     ropeTextBarSprite.setText(convertToText(ropes))
     if (toolIndex == 0) {
         toolHighlightSprite.setPosition(12, 6)
-    } else {
+    } else if (toolIndex == 1) {
         toolHighlightSprite.setPosition(36, 6)
+    } else {
+        toolHighlightSprite.setPosition(60, 6)
     }
 }
 controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
     toolIndex = toolIndex + 1
-    if (toolIndex > 1) {
+    if (toolIndex > 2) {
         toolIndex = 0
     }
     updateStatusBar()
@@ -376,6 +413,9 @@ function rzućLinę () {
 }
 function changePoints (diff: number) {
     points = points + diff
+    if (diff > 0) {
+        music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.InBackground)
+    }
     updateStatusBar()
 }
 function wGórę () {
@@ -390,7 +430,6 @@ function wGórę () {
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
     changePoints(1)
     sprites.destroy(otherSprite, effects.trail, 100)
-    music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.InBackground)
 })
 function clearLevel () {
     sprites.destroyAllSpritesOfKind(SpriteKind.Food)
@@ -399,6 +438,28 @@ function clearLevel () {
     sprites.destroyAllSpritesOfKind(SpriteKind.Trap)
     scene.setBackgroundColor(15)
 }
+sprites.onOverlap(SpriteKind.Player, SpriteKind.LovingEnemy, function (sprite, otherSprite) {
+    sprites.destroy(otherSprite, effects.fire, 500)
+    changePoints(5)
+    changeLife(1)
+})
+sprites.onOverlap(SpriteKind.nabój_serce, SpriteKind.Enemy, function (sprite, otherSprite) {
+    lovingEnemy = sprites.create(img`
+        . . . . . . . . 
+        . . . . . . . . 
+        . . 3 3 3 3 . . 
+        . . f 3 3 f . . 
+        . 3 . 3 3 . 3 . 
+        . . . 3 3 . . . 
+        . . . 3 3 . . . 
+        . 3 3 . . 3 3 . 
+        `, SpriteKind.LovingEnemy)
+    lovingEnemy.setPosition(otherSprite.x, otherSprite.y)
+    lovingEnemy.follow(marian, -10)
+    sprites.destroy(otherSprite)
+    sprites.destroy(sprite)
+    music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.InBackground)
+})
 function załadujPoziom (poziom: number) {
     clearLevel()
     game.splash("Poziom", poziom)
@@ -446,7 +507,7 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`life`, function (sprite, loca
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
     if (sprite.vy > 0 && !(sprite.isHittingTile(CollisionDirection.Bottom)) || sprite.y < otherSprite.top) {
         otherSprite.destroy(effects.ashes, 250)
-        music.powerUp.play()
+        changePoints(2)
     } else {
         changeLife(-1)
         music.powerDown.play()
@@ -499,6 +560,7 @@ function rzućBombę () {
 }
 let hittingSpikes = 0
 let bomba: Sprite = null
+let lovingEnemy: Sprite = null
 let coinAnimation: animation.Animation = null
 let marianIdzieWLewo: animation.Animation = null
 let life_cost: TextSprite = null
@@ -506,6 +568,8 @@ let snakeSprite: Sprite = null
 let spikesSprite: Sprite = null
 let pozycjaStartowaMariana: tiles.Location = null
 let snakeSpeed = 0
+let nabój_serce: Sprite = null
+let kierunek = 0
 let mySprite = 0
 let toolHighlightSprite: Sprite = null
 let ropeTextBarSprite: TextSprite = null
@@ -541,13 +605,23 @@ marianek = img`
     . . 2 . . 2 . . 
     . . 2 . . 2 . . 
     `
+let marianek_P = img`
+    . . . . . . . . 
+    . . . . . . . . 
+    . . 5 5 1 1 . . 
+    . 5 5 2 1 6 4 . 
+    . . 2 2 2 2 4 . 
+    . . 2 2 2 2 . . 
+    . . 2 . . 2 . . 
+    . . 2 . . 2 . . 
+    `
 poziom = 1
 invincibilityPeriod = 1000
 life_cost_value = 5
 gun_cost_value = 15
 bomb_cost_value = 10
 rope_cost_value = 5
-toolIndex = 0
+toolIndex = 2
 stwórzMariana()
 stwórzAnimacje()
 załadujPoziom(poziom)
@@ -558,6 +632,26 @@ life = 2
 bombs = 99
 ropes = 99
 buildStatusBar()
+// bumper movement
+game.onUpdate(function () {
+    for (let value9 of sprites.allOfKind(SpriteKind.Enemy)) {
+        if (myCategory.isAtTheRightEdge(value9)) {
+            value9.vx = 0 - snakeSpeed
+        } else if (myCategory.isAtTheLeftEdge(value9)) {
+            value9.vx = snakeSpeed
+        }
+    }
+    if (life <= 0) {
+        game.gameOver(false)
+    }
+    if (marian.vx > 0) {
+        kierunek = 1
+    } else if (marian.vx < 0) {
+        kierunek = -1
+    } else {
+    	
+    }
+})
 game.onUpdate(function () {
     if (marian.vx < 0) {
         animation.setAction(marian, ActionKind.Walking)
@@ -576,19 +670,6 @@ game.onUpdate(function () {
         tiles.setTileAt(marian.tilemapLocation().getNeighboringLocation(CollisionDirection.Bottom), assets.tile`myTile2`)
         scene.cameraShake(2, 500)
         music.play(music.melodyPlayable(music.thump), music.PlaybackMode.InBackground)
-    }
-})
-// bumper movement
-game.onUpdate(function () {
-    for (let value9 of sprites.allOfKind(SpriteKind.Enemy)) {
-        if (myCategory.isAtTheRightEdge(value9)) {
-            value9.vx = 0 - snakeSpeed
-        } else if (myCategory.isAtTheLeftEdge(value9)) {
-            value9.vx = snakeSpeed
-        }
-    }
-    if (life <= 0) {
-        game.gameOver(false)
     }
 })
 game.onUpdateInterval(25, function () {
